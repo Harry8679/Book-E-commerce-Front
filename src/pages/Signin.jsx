@@ -1,10 +1,9 @@
 import React from 'react'
+import Layout from '../components/Layout'
 
 const Signin = () => {
   return (
-    <div>
-      Sign in
-    </div>
+    <Layout title='Sign In Page' description='Node React E-commerce App'></Layout>
   )
 }
 
