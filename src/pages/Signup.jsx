@@ -4,7 +4,7 @@ import Layout from '../components/Layout'
 const Signup = () => {
   const signUpForm = () => {
     <form action="">
-      
+      <div className=''></div>
     </form>
   };
   return (
