@@ -1,10 +1,11 @@
 import React from 'react'
+import Layout from '../components/Layout'
 
 const Home = () => {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <Layout title='Home Page' description='Node React E-commerce App'>
+      This is a test
+    </Layout>
   )
 }
 
