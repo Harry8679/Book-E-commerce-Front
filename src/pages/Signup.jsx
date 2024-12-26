@@ -1,10 +1,9 @@
 import React from 'react'
+import Layout from '../components/Layout'
 
 const Signup = () => {
   return (
-    <div>
-      Sign Up
-    </div>
+    <Layout title='Sign Up Page' description='Node React E-commerce App'></Layout>
   )
 }
 
