@@ -3,9 +3,7 @@ import Layout from '../components/Layout'
 
 const Home = () => {
   return (
-    <Layout title='Home Page' description='Node React E-commerce App'>
-      This is a test
-    </Layout>
+    <Layout title='Home Page' description='Node React E-commerce App'></Layout>
   )
 }
 
