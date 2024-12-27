@@ -3,9 +3,12 @@ import Layout from '../components/Layout';
 
 const Signup = () => {
   // États pour les champs
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [formErrors, setFormErrors] = useState({ name: false, email: false });
 
   // Déterminer si les mots de passe correspondent
   const passwordsMatch = password && confirmPassword && password === confirmPassword;
@@ -13,9 +16,16 @@ const Signup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validation : Vérifie si les mots de passe correspondent
-    if (!passwordsMatch) {
-      setError('Passwords do not match');
+    const errors = {
+      name: !name, // True if name is empty
+      email: !email, // True if email is empty
+    };
+
+    setFormErrors(errors);
+
+    // Vérification globale des erreurs
+    if (!name || !email || !passwordsMatch) {
+      setError('Please fill out all fields correctly.');
     } else {
       setError('');
       // Logique d'inscription (par exemple, appeler une API)
@@ -33,7 +43,11 @@ const Signup = () => {
           <input 
             type="text" 
             id="name" 
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              formErrors.name ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+            }`}
             placeholder="Enter your name"
           />
         </div>
@@ -43,7 +57,11 @@ const Signup = () => {
           <input 
             type="email" 
             id="email" 
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              formErrors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+            }`}
             placeholder="Enter your email"
           />
         </div>
