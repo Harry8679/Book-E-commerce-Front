@@ -7,11 +7,14 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
+  // Déterminer si les mots de passe correspondent
+  const passwordsMatch = password && confirmPassword && password === confirmPassword;
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Validation : Vérifie si les mots de passe correspondent
-    if (password !== confirmPassword) {
+    if (!passwordsMatch) {
       setError('Passwords do not match');
     } else {
       setError('');
@@ -52,7 +55,13 @@ const Signup = () => {
             id="password" 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              password && confirmPassword
+                ? passwordsMatch
+                  ? 'border-green-500 focus:ring-green-500'
+                  : 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-blue-500'
+            }`}
             placeholder="Enter your password"
           />
         </div>
@@ -64,7 +73,13 @@ const Signup = () => {
             id="confirmPassword" 
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              password && confirmPassword
+                ? passwordsMatch
+                  ? 'border-green-500 focus:ring-green-500'
+                  : 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-blue-500'
+            }`}
             placeholder="Confirm your password"
           />
         </div>
