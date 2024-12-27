@@ -49,7 +49,7 @@ const Signup = () => {
 
   return (
     <Layout title="Sign Up Page" description="Node React E-commerce App">
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-start justify-center bg-gray-100 pt-8">
         <div className="grid grid-cols-12 gap-4 w-full px-4">
           <div className="col-span-3"></div> {/* Espace vide à gauche */}
           {signUpForm()}
