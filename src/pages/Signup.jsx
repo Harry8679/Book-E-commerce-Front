@@ -123,7 +123,7 @@ const Signup = () => {
           <ul className="space-y-2">
             <li className="flex items-center">
               {hasUpperCase ? (
-                <span className="text-green-500 mr-2">✔</span>
+                <span className="text-green-700 mr-2">✔</span>
               ) : (
                 <span className="text-red-500 mr-2">✘</span>
               )}
@@ -131,7 +131,7 @@ const Signup = () => {
             </li>
             <li className="flex items-center">
               {hasLowerCase ? (
-                <span className="text-green-500 mr-2">✔</span>
+                <span className="text-green-700 mr-2">✔</span>
               ) : (
                 <span className="text-red-500 mr-2">✘</span>
               )}
@@ -139,7 +139,7 @@ const Signup = () => {
             </li>
             <li className="flex items-center">
               {hasNumber ? (
-                <span className="text-green-500 mr-2">✔</span>
+                <span className="text-green-700 mr-2">✔</span>
               ) : (
                 <span className="text-red-500 mr-2">✘</span>
               )}
@@ -147,7 +147,7 @@ const Signup = () => {
             </li>
             <li className="flex items-center">
               {hasMinLength ? (
-                <span className="text-green-500 mr-2">✔</span>
+                <span className="text-green-700 mr-2">✔</span>
               ) : (
                 <span className="text-red-500 mr-2">✘</span>
               )}
