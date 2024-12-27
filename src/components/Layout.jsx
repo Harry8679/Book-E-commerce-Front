@@ -3,7 +3,7 @@ import React from 'react'
 const Layout = ({ title, description, className, children }) => {
   return (
     <div>
-      <section class="bg-gray-200 text-black py-24">
+      <section class="bg-gray-200 text-black py-10">
         {/* <div class="container mx-auto text-center"> */}
         <div class="container mx-auto">
           <h1 class="text-4xl font-bold">{title}</h1>
