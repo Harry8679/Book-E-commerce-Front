@@ -13,6 +13,12 @@ const Signup = () => {
   // Déterminer si les mots de passe correspondent
   const passwordsMatch = password && confirmPassword && password === confirmPassword;
 
+  // Critères de validation du mot de passe
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasMinLength = password.length >= 6;
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -110,6 +116,45 @@ const Signup = () => {
         >
           Sign Up
         </button>
+
+        {/* Rectangle pour les critères de mot de passe */}
+        <div className="mt-6 p-4 border border-gray-300 rounded-lg bg-gray-50">
+          <p className="font-medium text-gray-700 mb-2">Password must contain:</p>
+          <ul className="space-y-2">
+            <li className="flex items-center">
+              {hasUpperCase ? (
+                <span className="text-green-500 mr-2">✔</span>
+              ) : (
+                <span className="text-red-500 mr-2">✘</span>
+              )}
+              <span>At least one uppercase letter</span>
+            </li>
+            <li className="flex items-center">
+              {hasLowerCase ? (
+                <span className="text-green-500 mr-2">✔</span>
+              ) : (
+                <span className="text-red-500 mr-2">✘</span>
+              )}
+              <span>At least one lowercase letter</span>
+            </li>
+            <li className="flex items-center">
+              {hasNumber ? (
+                <span className="text-green-500 mr-2">✔</span>
+              ) : (
+                <span className="text-red-500 mr-2">✘</span>
+              )}
+              <span>At least one number</span>
+            </li>
+            <li className="flex items-center">
+              {hasMinLength ? (
+                <span className="text-green-500 mr-2">✔</span>
+              ) : (
+                <span className="text-red-500 mr-2">✘</span>
+              )}
+              <span>At least 6 characters</span>
+            </li>
+          </ul>
+        </div>
       </form>
     );
   };
