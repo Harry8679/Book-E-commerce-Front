@@ -23,8 +23,8 @@ const Signup = () => {
     e.preventDefault();
 
     const errors = {
-      name: !name, // True if name is empty
-      email: !email, // True if email is empty
+      name: !name, // True si le champ name est vide
+      email: !email, // True si le champ email est vide
     };
 
     setFormErrors(errors);
@@ -41,11 +41,11 @@ const Signup = () => {
 
   const signUpForm = () => {
     return (
-      <form onSubmit={handleSubmit} className="col-span-6 bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Sign Up</h2>
+      <form onSubmit={handleSubmit} className="col-span-6 bg-white shadow-md rounded-lg p-6 text-gray-800">
+        <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
         
         <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Name</label>
+          <label htmlFor="name" className="block font-medium mb-2">Name</label>
           <input 
             type="text" 
             id="name" 
@@ -59,7 +59,7 @@ const Signup = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email</label>
+          <label htmlFor="email" className="block font-medium mb-2">Email</label>
           <input 
             type="email" 
             id="email" 
@@ -73,7 +73,7 @@ const Signup = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="password" className="block text-gray-700 font-medium mb-2">Password</label>
+          <label htmlFor="password" className="block font-medium mb-2">Password</label>
           <input 
             type="password" 
             id="password" 
@@ -91,7 +91,7 @@ const Signup = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="confirmPassword" className="block text-gray-700 font-medium mb-2">Confirm Password</label>
+          <label htmlFor="confirmPassword" className="block font-medium mb-2">Confirm Password</label>
           <input 
             type="password" 
             id="confirmPassword" 
@@ -119,11 +119,11 @@ const Signup = () => {
 
         {/* Rectangle pour les critères de mot de passe */}
         <div className="mt-6 p-4 border border-gray-300 rounded-lg bg-gray-50">
-          <p className="font-medium text-gray-700 mb-2">Password must contain:</p>
+          <p className="font-medium mb-2">Password must contain:</p>
           <ul className="space-y-2">
             <li className="flex items-center">
               {hasUpperCase ? (
-                <span className="text-green-700 mr-2">✔</span>
+                <span className="text-green-600 mr-2">&#10003;</span>
               ) : (
                 <span className="text-red-500 mr-2">✘</span>
               )}
@@ -131,7 +131,7 @@ const Signup = () => {
             </li>
             <li className="flex items-center">
               {hasLowerCase ? (
-                <span className="text-green-700 mr-2">✔</span>
+                <span className="text-green-600 mr-2">&#10003;</span>
               ) : (
                 <span className="text-red-500 mr-2">✘</span>
               )}
@@ -139,7 +139,7 @@ const Signup = () => {
             </li>
             <li className="flex items-center">
               {hasNumber ? (
-                <span className="text-green-700 mr-2">✔</span>
+                <span className="text-green-600 mr-2">&#10003;</span>
               ) : (
                 <span className="text-red-500 mr-2">✘</span>
               )}
@@ -147,7 +147,7 @@ const Signup = () => {
             </li>
             <li className="flex items-center">
               {hasMinLength ? (
-                <span className="text-green-700 mr-2">✔</span>
+                <span className="text-green-600 mr-2">&#10003;</span>
               ) : (
                 <span className="text-red-500 mr-2">✘</span>
               )}
