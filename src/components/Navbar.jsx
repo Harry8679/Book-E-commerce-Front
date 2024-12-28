@@ -9,8 +9,6 @@ const Navbar = ({ isAuthenticated, logout }) => {
   useEffect(() => {
     // Récupérer les données utilisateur du localStorage
     const storedUser = localStorage.getItem("user");
-    console.log('storedUser', storedUser);
-
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser); // Convertir en objet
       setUser(parsedUser.user); // Stocker uniquement les données utilisateur (sans token)
@@ -76,10 +74,7 @@ const Navbar = ({ isAuthenticated, logout }) => {
                 >Connexion</NavLink>
               </div>
             ) : (
-              <div className="relative flex items-center space-x-3">
-                {/* Display User Name */}
-                <span className="text-white font-medium">{user?.name}</span>
-
+              <div className="relative">
                 {/* User Circle */}
                 <div
                   className="w-10 h-10 bg-teal-500 text-white flex items-center justify-center rounded-full cursor-pointer font-bold text-lg"
