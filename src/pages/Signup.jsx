@@ -55,6 +55,10 @@ const Signup = () => {
       toast.success('User registered successfully!', {
         position: 'top-right',
         autoClose: 2000,
+        onClose: () => {
+          // Redirection après la fin de la notification
+          navigate('/'); // Remplacez '/' par la route de la page d'accueil
+        },
       });
 
       // Réinitialisation des champs
@@ -63,11 +67,6 @@ const Signup = () => {
       setPassword('');
       setConfirmPassword('');
       setError('');
-
-      // Redirection après 2 secondes
-      setTimeout(() => {
-        navigate('/'); // Remplacez '/' par la route de la page d'accueil
-      }, 2000);
     } catch (err) {
       // Gestion des erreurs
       setError(err.response?.data?.message || 'Something went wrong');
