@@ -65,11 +65,11 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
               <div className="relative">
                 {/* User Circle */}
                 <div
-                  className="w-10 h-10 bg-teal-500 text-white flex items-center justify-center rounded-full cursor-pointer"
+                  className="w-10 h-10 bg-teal-500 text-white flex items-center justify-center rounded-full cursor-pointer font-bold text-lg"
                   onClick={toggleMenu}
                 >
-                  {getUserInitials(user?.name)}
-                </div>
+                  {/* {getUserInitials(user?.name)} */}EB
+                  </div>
 
                 {/* Dropdown Menu */}
                 {menuOpen && (
