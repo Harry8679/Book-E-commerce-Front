@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Layout from '../components/Layout';
 
 const Signup = () => {
-  // États pour les champs
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,24 +9,24 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [formErrors, setFormErrors] = useState({ name: false, email: false });
 
-  // Déterminer si les mots de passe correspondent
+  // État pour afficher ou masquer les mots de passe
+  const [showPassword, setShowPassword] = useState(false);
+
   const passwordsMatch = password && confirmPassword && password === confirmPassword;
 
-  // Critères de validation du mot de passe
   const hasUpperCase = /[A-Z]/.test(password);
   const hasLowerCase = /[a-z]/.test(password);
   const hasNumber = /\d/.test(password);
   const hasMinLength = password.length >= 6;
 
-  // Vérification si tous les critères sont remplis
   const allCriteriaMet = hasUpperCase && hasLowerCase && hasNumber && hasMinLength;
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const errors = {
-      name: !name, // True si le champ name est vide
-      email: !email, // True si le champ email est vide
+      name: !name,
+      email: !email,
     };
 
     setFormErrors(errors);
@@ -36,7 +35,6 @@ const Signup = () => {
       setError('Please fill out all fields correctly.');
     } else {
       setError('');
-      // Logique d'inscription (par exemple, appeler une API)
       alert('Form submitted successfully!');
     }
   };
@@ -76,38 +74,56 @@ const Signup = () => {
 
         <div className="mb-4">
           <label htmlFor="password" className="block font-medium mb-2">Password</label>
-          <input 
-            type="password" 
-            id="password" 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-              password && confirmPassword
-                ? passwordsMatch
-                  ? 'border-green-500 focus:ring-green-500'
-                  : 'border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:ring-blue-500'
-            }`}
-            placeholder="Enter your password"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                password && confirmPassword
+                  ? passwordsMatch
+                    ? 'border-green-500 focus:ring-green-500'
+                    : 'border-red-500 focus:ring-red-500'
+                  : 'border-gray-300 focus:ring-blue-500'
+              }`}
+              placeholder="Enter your password"
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-3 flex items-center text-gray-600"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
         </div>
 
         <div className="mb-4">
           <label htmlFor="confirmPassword" className="block font-medium mb-2">Confirm Password</label>
-          <input 
-            type="password" 
-            id="confirmPassword" 
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-              password && confirmPassword
-                ? passwordsMatch
-                  ? 'border-green-500 focus:ring-green-500'
-                  : 'border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:ring-blue-500'
-            }`}
-            placeholder="Confirm your password"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                password && confirmPassword
+                  ? passwordsMatch
+                    ? 'border-green-500 focus:ring-green-500'
+                    : 'border-red-500 focus:ring-red-500'
+                  : 'border-gray-300 focus:ring-blue-500'
+              }`}
+              placeholder="Confirm your password"
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-3 flex items-center text-gray-600"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
         </div>
 
         {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
@@ -124,7 +140,6 @@ const Signup = () => {
           Sign Up
         </button>
 
-        {/* Rectangle pour les critères de mot de passe */}
         <div className="mt-6 p-4 border border-gray-300 rounded-lg bg-gray-50">
           <p className="font-medium mb-2">Password must contain:</p>
           <ul className="space-y-2">
