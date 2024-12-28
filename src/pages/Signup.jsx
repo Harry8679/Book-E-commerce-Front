@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Pour les icônes
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import des icônes
+import axios from 'axios'; // Pour les requêtes HTTP
 import Layout from '../components/Layout';
 
 const Signup = () => {
@@ -8,6 +9,7 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [formErrors, setFormErrors] = useState({ name: false, email: false });
 
   // États pour afficher/masquer les mots de passe
@@ -23,7 +25,7 @@ const Signup = () => {
 
   const allCriteriaMet = hasUpperCase && hasLowerCase && hasNumber && hasMinLength;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const errors = {
@@ -35,9 +37,29 @@ const Signup = () => {
 
     if (!name || !email || !passwordsMatch || !allCriteriaMet) {
       setError('Please fill out all fields correctly.');
-    } else {
+      setSuccess('');
+      return;
+    }
+
+    try {
+      // Envoi des données au backend via Axios
+      const response = await axios.post('http://localhost:8008/api/v1/users/signup', {
+        name,
+        email,
+        password,
+      });
+
+      // Affichage du succès
+      setSuccess('User registered successfully!');
       setError('');
-      alert('Form submitted successfully!');
+      setName('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+    } catch (err) {
+      // Gestion des erreurs
+      setError(err.response?.data?.message || 'Something went wrong');
+      setSuccess('');
     }
   };
 
@@ -45,6 +67,12 @@ const Signup = () => {
     return (
       <form onSubmit={handleSubmit} className="col-span-6 bg-white shadow-md rounded-lg p-6 text-gray-800">
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
+
+        {/* Message de succès */}
+        {success && <div className="text-green-500 text-sm mb-4">{success}</div>}
+
+        {/* Message d'erreur */}
+        {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
         
         <div className="mb-4">
           <label htmlFor="name" className="block font-medium mb-2">Name</label>
@@ -127,8 +155,6 @@ const Signup = () => {
             </button>
           </div>
         </div>
-
-        {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
 
         <button
           type="submit"
