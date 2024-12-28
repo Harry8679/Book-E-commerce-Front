@@ -75,6 +75,10 @@ const Navbar = ({ isAuthenticated, logout }) => {
               </div>
             ) : (
               <div className="relative">
+                {/* Display User Name */}
+                <span className="text-white font-medium hidden sm:block">
+                  {user?.name}
+                </span>
                 {/* User Circle */}
                 <div
                   className="w-10 h-10 bg-teal-500 text-white flex items-center justify-center rounded-full cursor-pointer font-bold text-lg"
