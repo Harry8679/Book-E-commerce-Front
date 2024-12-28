@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import des icônes
 import axios from 'axios'; // Pour les requêtes HTTP
+import { toast, ToastContainer } from 'react-toastify'; // Import React Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Styles pour React Toastify
+import { useNavigate } from 'react-router-dom'; // Pour la redirection
 import Layout from '../components/Layout';
 
 const Signup = () => {
@@ -9,10 +12,8 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [formErrors, setFormErrors] = useState({ name: false, email: false });
 
-  // États pour afficher/masquer les mots de passe
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -24,6 +25,8 @@ const Signup = () => {
   const hasMinLength = password.length >= 6;
 
   const allCriteriaMet = hasUpperCase && hasLowerCase && hasNumber && hasMinLength;
+
+  const navigate = useNavigate(); // Hook pour la redirection
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,29 +40,41 @@ const Signup = () => {
 
     if (!name || !email || !passwordsMatch || !allCriteriaMet) {
       setError('Please fill out all fields correctly.');
-      setSuccess('');
       return;
     }
 
     try {
       // Envoi des données au backend via Axios
-      const response = await axios.post('http://localhost:8008/api/v1/users/signup', {
+      await axios.post('http://localhost:8008/api/v1/users/signup', {
         name,
         email,
         password,
       });
 
-      // Affichage du succès
-      setSuccess('User registered successfully!');
-      setError('');
+      // Notification de succès
+      toast.success('User registered successfully!', {
+        position: 'top-right',
+        autoClose: 2000,
+      });
+
+      // Réinitialisation des champs
       setName('');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
+      setError('');
+
+      // Redirection après 2 secondes
+      setTimeout(() => {
+        navigate('/'); // Remplacez '/' par la route de la page d'accueil
+      }, 2000);
     } catch (err) {
       // Gestion des erreurs
       setError(err.response?.data?.message || 'Something went wrong');
-      setSuccess('');
+      toast.error(err.response?.data?.message || 'Something went wrong', {
+        position: 'top-right',
+        autoClose: 2000,
+      });
     }
   };
 
@@ -67,9 +82,6 @@ const Signup = () => {
     return (
       <form onSubmit={handleSubmit} className="col-span-6 bg-white shadow-md rounded-lg p-6 text-gray-800">
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
-
-        {/* Message de succès */}
-        {success && <div className="text-green-500 text-sm mb-4">{success}</div>}
 
         {/* Message d'erreur */}
         {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
@@ -211,6 +223,7 @@ const Signup = () => {
 
   return (
     <Layout title="Sign Up Page" description="Node React E-commerce App">
+      <ToastContainer /> {/* Conteneur pour les notifications */}
       <div className="min-h-screen flex items-start justify-center bg-gray-100 pt-8">
         <div className="grid grid-cols-12 gap-4 w-full px-4">
           <div className="col-span-3"></div>
