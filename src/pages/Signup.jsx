@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import des icônes
+import axios from 'axios'; // Pour les requêtes HTTP
+import { toast, ToastContainer } from 'react-toastify'; // Import React Toastify
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Pour la redirection
 import Layout from '../components/Layout';
 
 const Signup = () => {
@@ -23,7 +23,7 @@ const Signup = () => {
   const hasLowerCase = /[a-z]/.test(password);
   const hasNumber = /\d/.test(password);
   const hasMinLength = password.length >= 6;
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password); // Nouveau critère
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
   const allCriteriaMet = hasUpperCase && hasLowerCase && hasNumber && hasMinLength && hasSpecialChar;
 
@@ -65,8 +65,8 @@ const Signup = () => {
       setConfirmPassword('');
       setError('');
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong');
-      toast.error(err.response?.data?.message || 'Something went wrong', {
+      setError(err.response?.data?.error || 'Something went wrong'); // Affichage des erreurs du backend
+      toast.error(err.response?.data?.error || 'Something went wrong', {
         position: 'top-right',
         autoClose: 2000,
       });
