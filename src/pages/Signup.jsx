@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Pour les icônes
 import Layout from '../components/Layout';
 
 const Signup = () => {
@@ -9,8 +10,9 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [formErrors, setFormErrors] = useState({ name: false, email: false });
 
-  // État pour afficher ou masquer les mots de passe
+  // États pour afficher/masquer les mots de passe
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const passwordsMatch = password && confirmPassword && password === confirmPassword;
 
@@ -94,7 +96,7 @@ const Signup = () => {
               className="absolute inset-y-0 right-3 flex items-center text-gray-600"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? 'Hide' : 'Show'}
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
         </div>
@@ -103,7 +105,7 @@ const Signup = () => {
           <label htmlFor="confirmPassword" className="block font-medium mb-2">Confirm Password</label>
           <div className="relative">
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showConfirmPassword ? 'text' : 'password'}
               id="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -119,9 +121,9 @@ const Signup = () => {
             <button
               type="button"
               className="absolute inset-y-0 right-3 flex items-center text-gray-600"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
-              {showPassword ? 'Hide' : 'Show'}
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
         </div>
