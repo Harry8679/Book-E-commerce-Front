@@ -19,6 +19,9 @@ const Signup = () => {
   const hasNumber = /\d/.test(password);
   const hasMinLength = password.length >= 6;
 
+  // Vérification si tous les critères sont remplis
+  const allCriteriaMet = hasUpperCase && hasLowerCase && hasNumber && hasMinLength;
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -29,8 +32,7 @@ const Signup = () => {
 
     setFormErrors(errors);
 
-    // Vérification globale des erreurs
-    if (!name || !email || !passwordsMatch) {
+    if (!name || !email || !passwordsMatch || !allCriteriaMet) {
       setError('Please fill out all fields correctly.');
     } else {
       setError('');
@@ -110,9 +112,14 @@ const Signup = () => {
 
         {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
 
-        <button 
-          type="submit" 
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300"
+        <button
+          type="submit"
+          className={`w-full py-2 px-4 rounded-lg transition duration-300 ${
+            allCriteriaMet && passwordsMatch
+              ? 'bg-blue-500 text-white hover:bg-blue-600'
+              : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+          }`}
+          disabled={!allCriteriaMet || !passwordsMatch}
         >
           Sign Up
         </button>
@@ -123,33 +130,33 @@ const Signup = () => {
           <ul className="space-y-2">
             <li className="flex items-center">
               {hasUpperCase ? (
-                <span className="text-green-600 mr-2">&#10003;</span>
+                <span className="text-green-600 font-bold mr-2">&#10003;</span>
               ) : (
-                <span className="text-red-500 mr-2">✘</span>
+                <span className="text-red-500 font-bold mr-2">✘</span>
               )}
               <span>At least one uppercase letter</span>
             </li>
             <li className="flex items-center">
               {hasLowerCase ? (
-                <span className="text-green-600 mr-2">&#10003;</span>
+                <span className="text-green-600 font-bold mr-2">&#10003;</span>
               ) : (
-                <span className="text-red-500 mr-2">✘</span>
+                <span className="text-red-500 font-bold mr-2">✘</span>
               )}
               <span>At least one lowercase letter</span>
             </li>
             <li className="flex items-center">
               {hasNumber ? (
-                <span className="text-green-600 mr-2">&#10003;</span>
+                <span className="text-green-600 font-bold mr-2">&#10003;</span>
               ) : (
-                <span className="text-red-500 mr-2">✘</span>
+                <span className="text-red-500 font-bold mr-2">✘</span>
               )}
               <span>At least one number</span>
             </li>
             <li className="flex items-center">
               {hasMinLength ? (
-                <span className="text-green-600 mr-2">&#10003;</span>
+                <span className="text-green-600 font-bold mr-2">&#10003;</span>
               ) : (
-                <span className="text-red-500 mr-2">✘</span>
+                <span className="text-red-500 font-bold mr-2">✘</span>
               )}
               <span>At least 6 characters</span>
             </li>
@@ -163,9 +170,9 @@ const Signup = () => {
     <Layout title="Sign Up Page" description="Node React E-commerce App">
       <div className="min-h-screen flex items-start justify-center bg-gray-100 pt-8">
         <div className="grid grid-cols-12 gap-4 w-full px-4">
-          <div className="col-span-3"></div> {/* Espace vide à gauche */}
+          <div className="col-span-3"></div>
           {signUpForm()}
-          <div className="col-span-3"></div> {/* Espace vide à droite */}
+          <div className="col-span-3"></div>
         </div>
       </div>
     </Layout>
