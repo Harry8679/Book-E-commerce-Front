@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-const Navbar = ({ isAuthenticated, user, logout }) => {
+const Navbar = ({ isAuthenticated, logout }) => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState(null); // Stocker les données utilisateur localement
+
+  useEffect(() => {
+    // Récupérer les données utilisateur du localStorage
+    const storedUser = localStorage.getItem("user");
+    console.log('storedUser', storedUser);
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); // Convertir en objet et stocker
+    }
+  }, []);
 
   const handleLogout = () => {
     logout();
+    localStorage.removeItem("user"); // Supprimer les données utilisateur
+    setUser(null); // Réinitialiser localement
     navigate("/"); // Redirection après déconnexion
   };
 
@@ -68,8 +80,8 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
                   className="w-10 h-10 bg-teal-500 text-white flex items-center justify-center rounded-full cursor-pointer font-bold text-lg"
                   onClick={toggleMenu}
                 >
-                  {/* {getUserInitials(user?.name)} */}EB
-                  </div>
+                  {getUserInitials(user?.name)}
+                </div>
 
                 {/* Dropdown Menu */}
                 {menuOpen && (
