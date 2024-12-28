@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-const Navbar = ({ isAuthenticated, logout }) => {
+const Navbar = ({ isAuthenticated, user, logout }) => {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate("/"); // Redirection après déconnexion
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  const getUserInitials = (name) => {
+    if (!name) return "";
+    const parts = name.split(" ");
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
   };
 
   return (
@@ -33,9 +45,9 @@ const Navbar = ({ isAuthenticated, logout }) => {
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center space-x-4">
+          <div className="relative">
             {!isAuthenticated ? (
-              <>
+              <div className="flex items-center space-x-4">
                 <NavLink to="/signup" className={({ isActive }) =>
                     isActive
                       ? "px-4 py-2 bg-teal-600 rounded"
@@ -48,14 +60,49 @@ const Navbar = ({ isAuthenticated, logout }) => {
                       : "px-4 py-2 border border-teal-500 rounded hover:bg-teal-500 hover:text-white transition duration-300"
                   }
                 >Connexion</NavLink>
-              </>
+              </div>
             ) : (
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 bg-red-500 rounded hover:bg-red-600 transition duration-300"
-              >
-                Déconnexion
-              </button>
+              <div className="relative">
+                {/* User Circle */}
+                <div
+                  className="w-10 h-10 bg-teal-500 text-white flex items-center justify-center rounded-full cursor-pointer"
+                  onClick={toggleMenu}
+                >
+                  {getUserInitials(user?.name)}
+                </div>
+
+                {/* Dropdown Menu */}
+                {menuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg">
+                    <ul className="py-2">
+                      <li
+                        className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => navigate("/profile")}
+                      >
+                        Mon profil
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => navigate("/update-profile")}
+                      >
+                        Mettre à jour votre profil
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => navigate("/update-password")}
+                      >
+                        Mettre à jour leur mot de passe
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                        onClick={handleLogout}
+                      >
+                        Déconnexion
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
