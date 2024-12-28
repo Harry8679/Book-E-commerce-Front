@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import des icônes
-import axios from 'axios'; // Pour les requêtes HTTP
-import { toast, ToastContainer } from 'react-toastify'; // Import React Toastify
-import 'react-toastify/dist/ReactToastify.css'; // Styles pour React Toastify
-import { useNavigate } from 'react-router-dom'; // Pour la redirection
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 
 const Signup = () => {
@@ -23,10 +23,11 @@ const Signup = () => {
   const hasLowerCase = /[a-z]/.test(password);
   const hasNumber = /\d/.test(password);
   const hasMinLength = password.length >= 6;
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password); // Nouveau critère
 
-  const allCriteriaMet = hasUpperCase && hasLowerCase && hasNumber && hasMinLength;
+  const allCriteriaMet = hasUpperCase && hasLowerCase && hasNumber && hasMinLength && hasSpecialChar;
 
-  const navigate = useNavigate(); // Hook pour la redirection
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,31 +45,26 @@ const Signup = () => {
     }
 
     try {
-      // Envoi des données au backend via Axios
       await axios.post('http://localhost:8008/api/v1/users/signup', {
         name,
         email,
         password,
       });
 
-      // Notification de succès
       toast.success('User registered successfully!', {
         position: 'top-right',
         autoClose: 2000,
         onClose: () => {
-          // Redirection après la fin de la notification
-          navigate('/'); // Remplacez '/' par la route de la page d'accueil
+          navigate('/');
         },
       });
 
-      // Réinitialisation des champs
       setName('');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
       setError('');
     } catch (err) {
-      // Gestion des erreurs
       setError(err.response?.data?.message || 'Something went wrong');
       toast.error(err.response?.data?.message || 'Something went wrong', {
         position: 'top-right',
@@ -82,7 +78,6 @@ const Signup = () => {
       <form onSubmit={handleSubmit} className="col-span-6 bg-white shadow-md rounded-lg p-6 text-gray-800">
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
 
-        {/* Message d'erreur */}
         {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
         
         <div className="mb-4">
@@ -214,6 +209,14 @@ const Signup = () => {
               )}
               <span>At least 6 characters</span>
             </li>
+            <li className="flex items-center">
+              {hasSpecialChar ? (
+                <span className="text-green-600 font-bold mr-2">&#10003;</span>
+              ) : (
+                <span className="text-red-500 font-bold mr-2">✘</span>
+              )}
+              <span>At least one special character (!@#$%^&*(),.?":{}|&lt;&gt;)</span>
+            </li>
           </ul>
         </div>
       </form>
@@ -222,7 +225,7 @@ const Signup = () => {
 
   return (
     <Layout title="Sign Up Page" description="Node React E-commerce App">
-      <ToastContainer /> {/* Conteneur pour les notifications */}
+      <ToastContainer />
       <div className="min-h-screen flex items-start justify-center bg-gray-100 pt-8">
         <div className="grid grid-cols-12 gap-4 w-full px-4">
           <div className="col-span-3"></div>
