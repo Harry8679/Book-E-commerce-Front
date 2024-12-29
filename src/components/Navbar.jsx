@@ -43,9 +43,7 @@ const Navbar = ({ isAuthenticated, logout }) => {
               <NavLink to="/" className="text-teal-400">Mon Logo</NavLink>
             </div>
             <NavLink to="/" className={({ isActive }) =>
-                isActive
-                  ? "text-teal-400 border-b-2 border-teal-400"
-                  : "hover:text-teal-400 transition duration-300"
+                isActive ? "text-teal-400 border-b-2 border-teal-400" : "hover:text-teal-400 transition duration-300"
               }
             >Accueil</NavLink>
             <NavLink to="/listes-des-livres" className={({ isActive }) =>
