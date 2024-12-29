@@ -31,10 +31,11 @@ function App() {
     <BrowserRouter>
       <Navbar isAuthenticated={isAuthenticated} logout={logout} />
       <Routes>
-        <Route path="/signin" element={isAuthenticated ? (<Navigate to="/" />) : (<Signin login={login} />)}/>
-        <Route path="/signup" element={ isAuthenticated ? (<Navigate to="/" />) : (<Signup />)}/>
+        <Route path="/signin" element={isAuthenticated ? (<Navigate to="/" />) : (<Signin login={login} />)} />
+        <Route path="/signup" element={isAuthenticated ? (<Navigate to="/" />) : (<Signup />)} />
+        <Route path="/profile" element={isAuthenticated ? (<Profile />) : (<Navigate to="/signin" />)} />
         <Route path="/" element={<Home />} />
-      </Routes>
+      </Routes>;
     </BrowserRouter>
   );
 }
