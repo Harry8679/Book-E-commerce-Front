@@ -5,6 +5,7 @@ import Signin from './pages/Signin';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
+import Profile from './pages/Profile';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
