@@ -41,16 +41,7 @@ function App() {
             )
           }
         />
-        <Route
-          path="/signup"
-          element={
-            isAuthenticated ? (
-              <Navigate to="/" />
-            ) : (
-              <Signup />
-            )
-          }
-        />
+        <Route path="/signup" element={ isAuthenticated ? (<Navigate to="/" />) : (<Signup />)}/>
         <Route path="/" element={<Home />} />
       </Routes>
     </BrowserRouter>
