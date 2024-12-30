@@ -6,8 +6,8 @@ const Profile = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Récupérer l'utilisateur depuis localStorage
     const storedUser = JSON.parse(localStorage.getItem('user'));
+
     if (!storedUser) {
       setError('User not authenticated');
       return;
@@ -15,25 +15,33 @@ const Profile = () => {
 
     const { token, user } = storedUser;
 
-    // Appeler l'API pour récupérer les informations de l'utilisateur
     axios
-      .get(`http://localhost:8008/api/v1/user/${user._id}`, {
-        headers: { Authorization: `Bearer ${token}` }, // Inclure le token dans l'en-tête
+      .get(`http://localhost:8008/api/v1/profile/${user._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
         setUser(response.data);
       })
       .catch((err) => {
+        console.error(err.response || err.message); // Log pour débogage
         setError(err.response?.data?.error || 'Failed to fetch profile');
       });
   }, []);
 
   if (error) {
-    return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
   }
 
   if (!user) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   return (
