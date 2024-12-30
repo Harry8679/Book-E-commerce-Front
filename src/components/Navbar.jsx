@@ -78,6 +78,7 @@ const Navbar = ({ isAuthenticated, logout }) => {
                   onClick={toggleMenu}
                 >
                   {getUserInitials(user?.name)}
+                  {/* EB */}
                 </div>
 
                 {/* Dropdown Menu */}
