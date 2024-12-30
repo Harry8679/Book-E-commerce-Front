@@ -15,8 +15,7 @@ const Profile = () => {
 
     const { token, user } = storedUser;
 
-    axios
-      .get(`http://localhost:8008/api/v1/profile/${user._id}`, {
+    axios.get(`http://localhost:8008/api/v1/users/profile/${user._id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
