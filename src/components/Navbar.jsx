@@ -7,19 +7,21 @@ const Navbar = ({ isAuthenticated, logout }) => {
   const [user, setUser] = useState(null); // Stocker les données utilisateur localement
 
   useEffect(() => {
-    // Récupérer les données utilisateur du localStorage
     const storedUser = localStorage.getItem("user");
+    console.log("Stored user:", storedUser);
+
     if (storedUser) {
-      const parsedUser = JSON.parse(storedUser); // Convertir en objet
-      setUser(parsedUser.user); // Stocker uniquement les données utilisateur (sans token)
+      const parsedUser = JSON.parse(storedUser);
+      console.log("Parsed user:", parsedUser);
+      setUser(parsedUser.user); // Stocker uniquement les données utilisateur
     }
   }, []);
 
   const handleLogout = () => {
     logout();
-    localStorage.removeItem("user"); // Supprimer les données utilisateur
-    setUser(null); // Réinitialiser localement
-    navigate("/"); // Redirection après déconnexion
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/");
   };
 
   const toggleMenu = () => {
@@ -27,6 +29,7 @@ const Navbar = ({ isAuthenticated, logout }) => {
   };
 
   const getUserInitials = (name) => {
+    console.log("User name:", name);
     if (!name) return "";
     const parts = name.split(" ");
     if (parts.length === 1) return parts[0][0].toUpperCase();
@@ -77,8 +80,7 @@ const Navbar = ({ isAuthenticated, logout }) => {
                   className="w-10 h-10 bg-teal-500 text-white flex items-center justify-center rounded-full cursor-pointer font-bold text-lg"
                   onClick={toggleMenu}
                 >
-                  {getUserInitials(user?.name)}
-                  {/* EB */}
+                  {getUserInitials(user?.name || "Utilisateur")}
                 </div>
 
                 {/* Dropdown Menu */}
