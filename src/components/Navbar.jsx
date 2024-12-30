@@ -80,7 +80,7 @@ const Navbar = ({ isAuthenticated, logout }) => {
                   className="w-10 h-10 bg-teal-500 text-white flex items-center justify-center rounded-full cursor-pointer font-bold text-lg"
                   onClick={toggleMenu}
                 >
-                  {getUserInitials(user?.name || "Utilisateur")}
+                  {getUserInitials(user?.name || "Ebang Mezui")}
                 </div>
 
                 {/* Dropdown Menu */}
