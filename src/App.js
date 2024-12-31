@@ -7,6 +7,8 @@ import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import Profile from './pages/Profile';
 import Books from './pages/Books';
+import UpdateProfile from './pages/UpdateProfile';
+import UpdatePassword from './pages/UpdatePassword';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -36,6 +38,8 @@ function App() {
         <Route path="/signin" element={isAuthenticated ? (<Navigate to="/" />) : (<Signin login={login} />)} />
         <Route path="/signup" element={isAuthenticated ? (<Navigate to="/" />) : (<Signup />)} />
         <Route path="/profile" element={isAuthenticated ? (<Profile />) : (<Navigate to="/signin" />)} />
+        <Route path="/update-profile" element={isAuthenticated ? (<UpdateProfile />) : (<Navigate to="/signin" />)} />
+        <Route path="/update-password" element={isAuthenticated ? (<UpdatePassword />) : (<Navigate to="/signin" />)} />
         <Route path="/listes-des-livres" element={<Books />} />
         <Route path="/" element={<Home />} />
       </Routes>
