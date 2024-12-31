@@ -36,7 +36,7 @@ function App() {
         <Route path="/signup" element={isAuthenticated ? (<Navigate to="/" />) : (<Signup />)} />
         <Route path="/profile" element={isAuthenticated ? (<Profile />) : (<Navigate to="/signin" />)} />
         <Route path="/" element={<Home />} />
-      </Routes>;
+      </Routes>
     </BrowserRouter>
   );
 }

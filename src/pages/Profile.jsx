@@ -7,7 +7,6 @@ const Profile = () => {
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
-    console.log("Stored user:", storedUser);
 
     if (!storedUser) {
       setError('User not authenticated');
@@ -15,17 +14,16 @@ const Profile = () => {
     }
 
     const { token, user } = storedUser;
-    console.log("Extracted user:", user);
 
-    axios.get(`http://localhost:8008/api/v1/profile/${user._id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+    // Corrigez l'URL ici
+    axios.get(`http://localhost:8008/api/v1/users/profile/${user._id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then((response) => {
-        console.log("Profile data:", response.data);
         setUser(response.data);
       })
       .catch((err) => {
-        console.error("Error fetching profile:", err.response || err);
+        console.error(err.response || err.message); // Log pour débogage
         setError(err.response?.data?.error || 'Failed to fetch profile');
       });
   }, []);

@@ -14,34 +14,33 @@ const Signin = ({ login }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!email || !password) {
       setError('Please fill out all fields.');
       return;
     }
-
+  
+    console.log('Attempting to login with:', { email, password });
+  
     try {
-      // Envoi des données au backend
       const response = await axios.post('http://localhost:8008/api/v1/users/signin', {
         email,
         password,
       });
-    
-      // Sauvegarde du token et des informations utilisateur dans le localStorage
-      const { token, user } = response.data;
-      localStorage.setItem('user', JSON.stringify({ token, user })); // Stocker le token et l'utilisateur
-      login(); // Définir l'utilisateur comme connecté
-    
-      // Notification de succès
+  
+      console.log('Login response:', response.data);
+  
+      // Sauvegarde de l'utilisateur et redirection
+      localStorage.setItem('user', JSON.stringify(response.data));
+      login();
+  
       toast.success('Login successful!', {
         position: 'top-right',
         autoClose: 2000,
-        onClose: () => {
-          navigate('/'); // Redirection après connexion
-        },
+        onClose: () => navigate('/'),
       });
     } catch (err) {
-      // Gestion des erreurs
+      console.error('Login error:', err.response || err.message);
       setError(err.response?.data?.error || 'Invalid credentials');
       toast.error(err.response?.data?.error || 'Invalid credentials', {
         position: 'top-right',
@@ -49,6 +48,8 @@ const Signin = ({ login }) => {
       });
     }
   };
+  
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
