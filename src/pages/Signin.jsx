@@ -39,10 +39,7 @@ const Signin = ({ login }) => {
     } catch (err) {
       console.error('Login error:', err.response || err.message);
       setError(err.response?.data?.error || 'Invalid credentials');
-      toast.error(err.response?.data?.error || 'Invalid credentials', {
-        position: 'top-right',
-        autoClose: 2000,
-      });
+      toast.error(err.response?.data?.error || 'Invalid credentials', { position: 'top-right', autoClose: 2000 });
     }
   };
   
