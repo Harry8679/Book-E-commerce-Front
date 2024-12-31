@@ -23,10 +23,7 @@ const Signin = ({ login }) => {
     console.log('Attempting to login with:', { email, password });
   
     try {
-      const response = await axios.post('http://localhost:8008/api/v1/users/signin', {
-        email,
-        password,
-      });
+      const response = await axios.post('http://localhost:8008/api/v1/users/signin', { email, password });
   
       console.log('Login response:', response.data);
   
