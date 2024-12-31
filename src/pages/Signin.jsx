@@ -26,10 +26,12 @@ const Signin = ({ login }) => {
         email,
         password,
       });
-
-      // Sauvegarde du token ou statut de connexion
+    
+      // Sauvegarde du token et des informations utilisateur dans le localStorage
+      const { token, user } = response.data;
+      localStorage.setItem('user', JSON.stringify({ token, user })); // Stocker le token et l'utilisateur
       login(); // Définir l'utilisateur comme connecté
-
+    
       // Notification de succès
       toast.success('Login successful!', {
         position: 'top-right',
@@ -40,8 +42,8 @@ const Signin = ({ login }) => {
       });
     } catch (err) {
       // Gestion des erreurs
-      setError(err.response?.data?.message || 'Invalid credentials');
-      toast.error(err.response?.data?.message || 'Invalid credentials', {
+      setError(err.response?.data?.error || 'Invalid credentials');
+      toast.error(err.response?.data?.error || 'Invalid credentials', {
         position: 'top-right',
         autoClose: 2000,
       });
