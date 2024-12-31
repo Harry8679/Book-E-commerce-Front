@@ -6,6 +6,7 @@ import Signup from './pages/Signup';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import Profile from './pages/Profile';
+import Books from './pages/Books';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -35,6 +36,7 @@ function App() {
         <Route path="/signin" element={isAuthenticated ? (<Navigate to="/" />) : (<Signin login={login} />)} />
         <Route path="/signup" element={isAuthenticated ? (<Navigate to="/" />) : (<Signup />)} />
         <Route path="/profile" element={isAuthenticated ? (<Profile />) : (<Navigate to="/signin" />)} />
+        <Route path="/listes-des-livres" element={<Books />} />
         <Route path="/" element={<Home />} />
       </Routes>
     </BrowserRouter>
