@@ -43,7 +43,7 @@ const Navbar = ({ isAuthenticated, logout }) => {
           {/* Left Section */}
           <div className="flex items-center space-x-6">
             <div className="text-2xl font-bold">
-              <NavLink to="/" className="text-teal-400">Mon Logo</NavLink>
+              <NavLink to="/" className="text-teal-400">Harry Boutique</NavLink>
             </div>
             <NavLink to="/" className={({ isActive }) =>
               isActive ? "text-teal-400 border-b-2 border-teal-400" : "hover:text-teal-400 transition duration-300"}

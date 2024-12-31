@@ -14,39 +14,48 @@ const Signin = ({ login }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!email || !password) {
       setError('Please fill out all fields.');
       return;
     }
-  
+
     console.log('Attempting to login with:', { email, password });
-  
+
     try {
       const response = await axios.post('http://localhost:8008/api/v1/users/signin', { email, password });
-  
+
       console.log('Login response:', response.data);
-  
-      // Sauvegarde de l'utilisateur et redirection
+
+      // Sauvegarder les données de l'utilisateur dans localStorage
       localStorage.setItem('user', JSON.stringify(response.data));
       login();
-  
+
+      // Afficher le popup de succès
       toast.success('Login successful!', {
         position: 'top-right',
-        autoClose: 2000,
-        onClose: () => navigate('/'),
+        autoClose: 2000, // Durée de 2 secondes
       });
+
+      // Redirection après 2 secondes
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
     } catch (err) {
       console.error('Login error:', err.response || err.message);
       setError(err.response?.data?.error || 'Invalid credentials');
-      toast.error(err.response?.data?.error || 'Invalid credentials', { position: 'top-right', autoClose: 2000 });
+
+      // Afficher le popup d'erreur
+      toast.error(err.response?.data?.error || 'Invalid credentials', {
+        position: 'top-right',
+        autoClose: 2000,
+      });
     }
   };
-  
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      {/* Container pour les notifications */}
       <ToastContainer />
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6 w-96">
         <h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
