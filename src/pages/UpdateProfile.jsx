@@ -21,28 +21,29 @@ const UpdateProfile = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-
+  
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (!storedUser) {
       setError('User not authenticated');
       return;
     }
-
+  
     const { token } = storedUser;
-
+  
     try {
       setLoading(true);
       const response = await axios.put(
-        `http://localhost:8008/api/v1/profile/${user._id}`,
+        // Mise à jour de l'URL pour inclure "users"
+        `http://localhost:8008/api/v1/users/profile/${user._id}`,
         { name: user.name, email: user.email },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
+  
       toast.success('Profile updated successfully!', {
         position: 'top-right',
         autoClose: 2000,
       });
-
+  
       const updatedUser = { ...storedUser, user: response.data };
       localStorage.setItem('user', JSON.stringify(updatedUser));
     } catch (err) {
