@@ -4,7 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const UpdatePassword = () => {
-  const [password, setPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -13,8 +13,13 @@ const UpdatePassword = () => {
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
 
+    if (!currentPassword) {
+      setError('Current password is required');
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('New password and confirmation do not match');
       return;
     }
 
@@ -28,9 +33,9 @@ const UpdatePassword = () => {
 
     try {
       setLoading(true);
-      await axios.put(
-        `http://localhost:8008/api/v1/profile/${user._id}/password`,
-        { newPassword },
+      const response = await axios.put(
+        `http://localhost:8008/api/v1/users/profile/${user._id}/password`,
+        { currentPassword, newPassword },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -39,7 +44,7 @@ const UpdatePassword = () => {
         autoClose: 2000,
       });
 
-      setPassword('');
+      setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
       setError('');
@@ -63,6 +68,17 @@ const UpdatePassword = () => {
         {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
         <form onSubmit={handleUpdatePassword}>
           <div className="mb-4">
+            <label htmlFor="currentPassword" className="block font-medium mb-2">Current Password</label>
+            <input
+              type="password"
+              id="currentPassword"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter current password"
+            />
+          </div>
+          <div className="mb-4">
             <label htmlFor="newPassword" className="block font-medium mb-2">New Password</label>
             <input
               type="password"
@@ -74,7 +90,7 @@ const UpdatePassword = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="confirmPassword" className="block font-medium mb-2">Confirm Password</label>
+            <label htmlFor="confirmPassword" className="block font-medium mb-2">Confirm New Password</label>
             <input
               type="password"
               id="confirmPassword"
