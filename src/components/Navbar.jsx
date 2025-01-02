@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const Navbar = ({ isAuthenticated, logout }) => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null); // Stocker les données utilisateur localement
+  const menuRef = useRef(); // Référence pour le menu déroulant
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    console.log("Stored user:", storedUser);
-
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      console.log("Parsed user:", parsedUser);
       setUser(parsedUser.user); // Stocker uniquement les données utilisateur
     }
   }, []);
@@ -29,12 +27,27 @@ const Navbar = ({ isAuthenticated, logout }) => {
   };
 
   const getUserInitials = (name) => {
-    console.log("User name:", name);
     if (!name) return "";
     const parts = name.split(" ");
     if (parts.length === 1) return parts[0][0].toUpperCase();
     return (parts[0][0] + parts[1][0]).toUpperCase();
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Si le clic est en dehors du menu, fermer le menu
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    // Ajouter un écouteur pour les clics globaux
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      // Nettoyer l'écouteur lorsque le composant est démonté
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="bg-gray-800 text-white">
@@ -56,7 +69,7 @@ const Navbar = ({ isAuthenticated, logout }) => {
           </div>
 
           {/* Right Section */}
-          <div className="relative">
+          <div className="relative" ref={menuRef}>
             {!isAuthenticated ? (
               <div className="flex items-center space-x-4">
                 <NavLink to="/signup" className={({ isActive }) =>
