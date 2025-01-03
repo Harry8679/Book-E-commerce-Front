@@ -33,7 +33,7 @@ const UpdatePassword = () => {
 
     try {
       setLoading(true);
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:8008/api/v1/users/profile/${user._id}/password`,
         { currentPassword, newPassword },
         { headers: { Authorization: `Bearer ${token}` } }
