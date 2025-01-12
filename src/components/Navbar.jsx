@@ -99,6 +99,12 @@ const Navbar = ({ isAuthenticated, logout }) => {
                     <ul className="py-2">
                       <li
                         className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => navigate("/dashboard")}
+                      >
+                        Tableau de Bord
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
                         onClick={() => navigate("/profile")}
                       >
                         Mon profil
@@ -113,7 +119,7 @@ const Navbar = ({ isAuthenticated, logout }) => {
                         className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
                         onClick={() => navigate("/update-password")}
                       >
-                        Mettre à jour leur mot de passe
+                        Mettre à jour votre mot de passe
                       </li>
                       <li
                         className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
