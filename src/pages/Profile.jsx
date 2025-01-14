@@ -2,29 +2,42 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const Profile = () => {
-  const [user, setUser] = useState(null); // Stocker les données utilisateur
+  const [user, setUser] = useState(null);  // Stocker les données utilisateur
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-
-    if (!storedUser) {
-      setError('User not authenticated');
+    // Vérifier si l'utilisateur est bien stocké
+    let storedUser = null;
+    try {
+      storedUser = JSON.parse(localStorage.getItem('user'));
+    } catch (err) {
+      console.error("Erreur lors du parsing des données utilisateur :", err);
+      setError("Erreur de récupération des données utilisateur.");
       return;
     }
 
-    const { token, user } = storedUser;
+    if (!storedUser || !storedUser._id) {
+      setError('Utilisateur non authentifié ou données manquantes.');
+      return;
+    }
 
-    // Corrigez l'URL ici
-    axios.get(`http://localhost:8008/api/v1/users/profile/${user._id}`, {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      setError('Jeton de connexion manquant.');
+      return;
+    }
+
+    // Requête sécurisée pour récupérer les infos utilisateur
+    axios.get(`http://localhost:8008/api/v1/users/profile/${storedUser._id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => {
         setUser(response.data);
       })
       .catch((err) => {
-        console.error(err.response || err.message); // Log pour débogage
-        setError(err.response?.data?.error || 'Failed to fetch profile');
+        console.error("Erreur lors de la récupération du profil :", err.response || err.message);
+        setError(err.response?.data?.error || 'Impossible de récupérer le profil');
       });
   }, []);
 
@@ -39,7 +52,7 @@ const Profile = () => {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p>Loading...</p>
+        <p>Chargement...</p>
       </div>
     );
   }
