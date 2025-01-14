@@ -10,6 +10,11 @@ import Books from './pages/Books';
 import UpdateProfile from './pages/UpdateProfile';
 import UpdatePassword from './pages/UpdatePassword';
 import Dashboard from './pages/Dashboard';
+import AdminRoute from './AdminRoute';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import ManageUsers from './pages/admin/MangeUsers';
+import ManageCategories from './pages/admin/ManageCategories';
+import ManageProducts from './pages/admin/ManageProducts';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -51,6 +56,12 @@ function App() {
         <Route path="/update-password" element={isAuthenticated ? (<UpdatePassword />) : (<Navigate to="/signin" />)} />
         <Route path="/listes-des-livres" element={<Books />} />
         <Route path="/" element={<Home />} />
+
+        {/* Routes Admin protégées */}
+        <Route path="/admin/dashboard" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><AdminDashboard /></AdminRoute>} />
+        <Route path="/admin/users" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageUsers /></AdminRoute>} />
+        <Route path="/admin/categories" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageCategories /></AdminRoute>} />
+        <Route path="/admin/products" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageProducts /></AdminRoute>} />
       </Routes>
     </BrowserRouter>
   );

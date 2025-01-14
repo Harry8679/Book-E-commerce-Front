@@ -35,16 +35,13 @@ const Navbar = ({ isAuthenticated, logout }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Si le clic est en dehors du menu, fermer le menu
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuOpen(false);
       }
     };
 
-    // Ajouter un écouteur pour les clics globaux
     document.addEventListener("click", handleClickOutside);
     return () => {
-      // Nettoyer l'écouteur lorsque le composant est démonté
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
@@ -64,8 +61,22 @@ const Navbar = ({ isAuthenticated, logout }) => {
             <NavLink to="/listes-des-livres" className={({ isActive }) =>
               isActive
                 ? "text-teal-400 border-b-2 border-teal-400"
-                : "hover:text-teal-400 transition duration-300"
-            }>Liste des livres</NavLink>
+                : "hover:text-teal-400 transition duration-300"}
+            >Liste des livres</NavLink>
+
+            {/* Lien Admin visible uniquement si l'utilisateur est admin */}
+            {isAuthenticated && user?.role === 1 && (
+              <NavLink
+                to="/admin/dashboard"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-teal-400 border-b-2 border-teal-400"
+                    : "hover:text-teal-400 transition duration-300"
+                }
+              >
+                Admin
+              </NavLink>
+            )}
           </div>
 
           {/* Right Section */}
@@ -97,12 +108,14 @@ const Navbar = ({ isAuthenticated, logout }) => {
                 {menuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg">
                     <ul className="py-2">
-                      <li
-                        className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                        onClick={() => navigate("/dashboard")}
-                      >
-                        Tableau de Bord
-                      </li>
+                      {user?.role === 1 && (
+                        <li
+                          className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                          onClick={() => navigate("/admin/dashboard")}
+                        >
+                          Tableau de Bord Admin
+                        </li>
+                      )}
                       <li
                         className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
                         onClick={() => navigate("/profile")}
