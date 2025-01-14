@@ -12,13 +12,15 @@ const Navbar = ({ isAuthenticated, logout }) => {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser.user);
+        setUser(parsedUser); // Plus de `.user`
+      } else {
+        console.warn("Aucun utilisateur trouvé dans le localStorage.");
       }
     } catch (error) {
-      console.error("Erreur lors du parsing de 'user' dans Navbar :", error);
+      console.error("Erreur lors du parsing de 'user' :", error);
       localStorage.removeItem("user");
     }
-  }, []);  
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -33,10 +35,17 @@ const Navbar = ({ isAuthenticated, logout }) => {
 
   const getUserInitials = (name) => {
     if (!name) return "";
-    const parts = name.split(" ");
+    const parts = name.trim().split(/\s+/); // Supprime les espaces en trop
     if (parts.length === 1) return parts[0][0].toUpperCase();
     return (parts[0][0] + parts[1][0]).toUpperCase();
   };
+
+  // const getUserInitials = (name) => {
+  //   if (!name) return "";
+  //   const parts = name.split(" ");
+  //   if (parts.length === 1) return parts[0][0].toUpperCase();
+  //   return (parts[0][0] + parts[1][0]).toUpperCase();
+  // };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -106,7 +115,8 @@ const Navbar = ({ isAuthenticated, logout }) => {
                   className="w-10 h-10 bg-teal-500 text-white flex items-center justify-center rounded-full cursor-pointer font-bold text-lg"
                   onClick={toggleMenu}
                 >
-                  {getUserInitials(user?.name || "Ebang Mezui")}
+                  {/* {getUserInitials(user?.name || "Ebang Mezui")} */}
+                  {user ? getUserInitials(user.name) : ""}
                 </div>
 
                 {/* Dropdown Menu */}

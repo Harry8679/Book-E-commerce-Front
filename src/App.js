@@ -37,11 +37,16 @@ function App() {
 
   // Fonction pour se connecter
   const login = (user) => {
-    localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('user', JSON.stringify(user));
-    setIsAuthenticated(true);
-    setUserRole(user.role);
+    if (user && user.name && user.role !== undefined) {
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('user', JSON.stringify(user)); // Stocke l'utilisateur complet
+      setIsAuthenticated(true);
+      setUserRole(user.role);
+    } else {
+      console.error("Les données de l'utilisateur sont incomplètes :", user);
+    }
   };
+  
   
   // Fonction pour se déconnecter
   const logout = () => {
