@@ -28,30 +28,26 @@ function App() {
       const userData = localStorage.getItem('user');
       storedUser = userData ? JSON.parse(userData) : null;
     } catch (error) {
-      console.error("Erreur lors du parsing de 'user' depuis localStorage :", error);
-      localStorage.removeItem('user');  // Supprime les données corrompues
+      console.error("Erreur lors du parsing de 'user' :", error);
+      localStorage.removeItem('user');
     }
     setIsAuthenticated(authStatus);
     setUserRole(storedUser?.role);
   }, []);
 
-  // Fonction pour se connecter
   const login = (user) => {
     if (user && user.name && user.role !== undefined) {
       localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('user', JSON.stringify(user)); // Stocke l'utilisateur complet
+      localStorage.setItem('user', JSON.stringify(user));
       setIsAuthenticated(true);
       setUserRole(user.role);
     } else {
       console.error("Les données de l'utilisateur sont incomplètes :", user);
     }
   };
-  
-  
-  // Fonction pour se déconnecter
+
   const logout = () => {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('user');
+    localStorage.clear();
     setIsAuthenticated(false);
     setUserRole(null);
   };
