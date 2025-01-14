@@ -8,12 +8,17 @@ const Navbar = ({ isAuthenticated, logout }) => {
   const menuRef = useRef(); // Référence pour le menu déroulant
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser.user); // Stocker uniquement les données utilisateur
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser.user);
+      }
+    } catch (error) {
+      console.error("Erreur lors du parsing de 'user' dans Navbar :", error);
+      localStorage.removeItem("user");
     }
-  }, []);
+  }, []);  
 
   const handleLogout = () => {
     logout();

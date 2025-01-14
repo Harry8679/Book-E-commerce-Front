@@ -23,7 +23,14 @@ function App() {
   // Vérifiez le statut de connexion à partir de localStorage
   useEffect(() => {
     const authStatus = localStorage.getItem('isAuthenticated') === 'true';
-    const storedUser = JSON.parse(localStorage.getItem('user'));
+    let storedUser = null;
+    try {
+      const userData = localStorage.getItem('user');
+      storedUser = userData ? JSON.parse(userData) : null;
+    } catch (error) {
+      console.error("Erreur lors du parsing de 'user' depuis localStorage :", error);
+      localStorage.removeItem('user');  // Supprime les données corrompues
+    }
     setIsAuthenticated(authStatus);
     setUserRole(storedUser?.role);
   }, []);
