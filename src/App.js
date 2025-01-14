@@ -13,23 +13,30 @@ import Dashboard from './pages/Dashboard';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
   // Vérifiez le statut de connexion à partir de localStorage
   useEffect(() => {
     const authStatus = localStorage.getItem('isAuthenticated') === 'true';
+    const storedUser = JSON.parse(localStorage.getItem('user'));
     setIsAuthenticated(authStatus);
+    setUserRole(storedUser?.role);
   }, []);
 
   // Fonction pour se connecter
-  const login = () => {
+  const login = (user) => {
     localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('user', JSON.stringify(user));
     setIsAuthenticated(true);
+    setUserRole(user.role);
   };
-
+  
   // Fonction pour se déconnecter
   const logout = () => {
     localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('user');
     setIsAuthenticated(false);
+    setUserRole(null);
   };
 
   return (
