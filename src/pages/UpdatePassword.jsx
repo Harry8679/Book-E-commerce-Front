@@ -10,7 +10,6 @@ const UpdatePassword = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // États pour afficher ou masquer les champs de mot de passe
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -28,23 +27,35 @@ const UpdatePassword = () => {
       return;
     }
 
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (!storedUser) {
-      setError('User not authenticated');
+    let storedUser = null;
+    try {
+      storedUser = JSON.parse(localStorage.getItem('user'));
+    } catch (err) {
+      console.error("Erreur lors de la récupération de l'utilisateur :", err);
+      setError('Erreur lors de la récupération des données utilisateur');
       return;
     }
 
-    const { token, user } = storedUser;
+    if (!storedUser || !storedUser._id) {
+      setError('Utilisateur non authentifié');
+      return;
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Jeton d’authentification manquant');
+      return;
+    }
 
     try {
       setLoading(true);
       await axios.put(
-        `http://localhost:8008/api/v1/users/profile/${user._id}/password`,
+        `http://localhost:8008/api/v1/users/profile/${storedUser._id}/password`,
         { currentPassword, newPassword },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      toast.success('Password updated successfully!', {
+      toast.success('Mot de passe mis à jour avec succès !', {
         position: 'top-right',
         autoClose: 2000,
       });
@@ -55,8 +66,8 @@ const UpdatePassword = () => {
       setError('');
     } catch (err) {
       console.error(err.response || err.message);
-      setError(err.response?.data?.error || 'Failed to update password');
-      toast.error(err.response?.data?.error || 'Failed to update password', {
+      setError(err.response?.data?.error || 'Échec de la mise à jour du mot de passe');
+      toast.error(err.response?.data?.error || 'Échec de la mise à jour', {
         position: 'top-right',
         autoClose: 2000,
       });
@@ -69,79 +80,51 @@ const UpdatePassword = () => {
     <div className="min-h-screen bg-gray-100 py-8">
       <ToastContainer />
       <div className="container mx-auto max-w-2xl bg-white shadow-md rounded-lg p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Update Password</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">Modifier le mot de passe</h1>
         {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
         <form onSubmit={handleUpdatePassword}>
           <div className="mb-4">
-            <label htmlFor="currentPassword" className="block font-medium mb-2">Current Password</label>
-            <div className="relative">
-              <input
-                type={showCurrentPassword ? 'text' : 'password'}
-                id="currentPassword"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter current password"
-              />
-              <button
-                type="button"
-                className="absolute inset-y-0 right-3 flex items-center text-gray-600"
-                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-              >
-                {showCurrentPassword ? '🙈' : '👁️'}
-              </button>
-            </div>
+            <label htmlFor="currentPassword">Mot de passe actuel</label>
+            <input
+              type={showCurrentPassword ? 'text' : 'password'}
+              id="currentPassword"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg"
+              placeholder="Mot de passe actuel"
+            />
           </div>
+
           <div className="mb-4">
-            <label htmlFor="newPassword" className="block font-medium mb-2">New Password</label>
-            <div className="relative">
-              <input
-                type={showNewPassword ? 'text' : 'password'}
-                id="newPassword"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter new password"
-              />
-              <button
-                type="button"
-                className="absolute inset-y-0 right-3 flex items-center text-gray-600"
-                onClick={() => setShowNewPassword(!showNewPassword)}
-              >
-                {showNewPassword ? '🙈' : '👁️'}
-              </button>
-            </div>
+            <label htmlFor="newPassword">Nouveau mot de passe</label>
+            <input
+              type={showNewPassword ? 'text' : 'password'}
+              id="newPassword"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg"
+              placeholder="Nouveau mot de passe"
+            />
           </div>
+
           <div className="mb-4">
-            <label htmlFor="confirmPassword" className="block font-medium mb-2">Confirm New Password</label>
-            <div className="relative">
-              <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                id="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Confirm new password"
-              />
-              <button
-                type="button"
-                className="absolute inset-y-0 right-3 flex items-center text-gray-600"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              >
-                {showConfirmPassword ? '🙈' : '👁️'}
-              </button>
-            </div>
+            <label htmlFor="confirmPassword">Confirmer le mot de passe</label>
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg"
+              placeholder="Confirmer le mot de passe"
+            />
           </div>
+
           <button
             type="submit"
-            className={`w-full py-2 px-4 rounded-lg transition duration-300 ${
-              loading
-                ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                : 'bg-blue-500 text-white hover:bg-blue-600'
-            }`}
+            className={`w-full py-2 px-4 rounded-lg ${loading ? 'bg-gray-300' : 'bg-blue-500 text-white'}`}
             disabled={loading}
           >
-            {loading ? 'Updating...' : 'Update Password'}
+            {loading ? 'Mise à jour...' : 'Mettre à jour le mot de passe'}
           </button>
         </form>
       </div>
