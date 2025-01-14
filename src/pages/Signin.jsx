@@ -27,25 +27,34 @@ const Signin = ({ login }) => {
 
       console.log('Login response:', response.data);
 
-      // Sauvegarder les données de l'utilisateur dans localStorage
-      localStorage.setItem('user', JSON.stringify(response.data));
-      login();
+      const { token, user } = response.data;
 
-      // Afficher le popup de succès
-      toast.success('Login successful!', {
-        position: 'top-right',
-        autoClose: 2000, // Durée de 2 secondes
-      });
+      // Vérifier si les données de l'utilisateur sont valides
+      if (user && user.name && user.role !== undefined) {
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('user', JSON.stringify(user));  // Stocker l'utilisateur
+        localStorage.setItem('token', token);                // Stocker le token
+        login(user);  // Met à jour l'état global
 
-      // Redirection après 2 secondes
-      setTimeout(() => {
+        // Afficher un message de succès
+        toast.success('Connexion réussie !', {
+          position: 'top-right',
+          autoClose: 2000,
+        });
+
+        // Redirection immédiate
         navigate('/');
-      }, 2000);
+      } else {
+        console.error("Données utilisateur incomplètes :", response.data);
+        toast.error("Erreur : données utilisateur invalides", {
+          position: 'top-right',
+          autoClose: 2000,
+        });
+      }
     } catch (err) {
-      console.error('Login error:', err.response || err.message);
+      console.error('Erreur de connexion :', err.response || err.message);
       setError(err.response?.data?.error || 'Invalid credentials');
 
-      // Afficher le popup d'erreur
       toast.error(err.response?.data?.error || 'Invalid credentials', {
         position: 'top-right',
         autoClose: 2000,
@@ -55,10 +64,9 @@ const Signin = ({ login }) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      {/* Container pour les notifications */}
       <ToastContainer />
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6 w-96">
-        <h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
+        <h2 className="text-2xl font-bold text-center mb-6">Connexion</h2>
         {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
         <div className="mb-4">
           <label htmlFor="email" className="block font-medium mb-2">Email</label>
@@ -68,11 +76,11 @@ const Signin = ({ login }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your email"
+            placeholder="Votre email"
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="password" className="block font-medium mb-2">Password</label>
+          <label htmlFor="password" className="block font-medium mb-2">Mot de passe</label>
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
@@ -80,7 +88,7 @@ const Signin = ({ login }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your password"
+              placeholder="Votre mot de passe"
             />
             <button
               type="button"
@@ -100,7 +108,7 @@ const Signin = ({ login }) => {
           }`}
           disabled={!email || !password}
         >
-          Sign In
+          Se connecter
         </button>
       </form>
     </div>
