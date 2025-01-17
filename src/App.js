@@ -37,10 +37,11 @@ function App() {
     setUserRole(storedUser?.role);
   }, []);
 
-  const login = (user) => {
-    if (user && user.name && user.role !== undefined) {
+  const login = (user, token) => {
+    if (user && user.name && user.role !== undefined && token) {
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('token', token);
       setIsAuthenticated(true);
       setUserRole(user.role);
     } else {
