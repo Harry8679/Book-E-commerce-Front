@@ -22,33 +22,34 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
 
-  // Vérifiez le statut de connexion à partir de localStorage
+  // ✅ Vérifier l'état de connexion au chargement de l'application
   useEffect(() => {
-    const authStatus = localStorage.getItem('isAuthenticated') === 'true';
-    let storedUser = null;
-    try {
-      const userData = localStorage.getItem('user');
-      storedUser = userData ? JSON.parse(userData) : null;
-    } catch (error) {
-      console.error("Erreur lors du parsing de 'user' :", error);
-      localStorage.removeItem('user');
-    }
-    setIsAuthenticated(authStatus);
-    setUserRole(storedUser?.role);
-  }, []);
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
 
-  const login = (user, token) => {
-    if (user && user.name && user.role !== undefined && token) {
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('token', token);
+    if (token && userData) {
+      const user = JSON.parse(userData);
       setIsAuthenticated(true);
       setUserRole(user.role);
     } else {
-      console.error("Les données de l'utilisateur sont incomplètes :", user);
+      setIsAuthenticated(false);
+      setUserRole(null);
+    }
+  }, []);
+
+  // ✅ Connexion de l'utilisateur
+  const login = (user, token) => {
+    if (user && token) {
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      setIsAuthenticated(true);
+      setUserRole(user.role);
+    } else {
+      console.error("Erreur : Données utilisateur ou token manquantes");
     }
   };
 
+  // ✅ Déconnexion de l'utilisateur
   const logout = () => {
     localStorage.clear();
     setIsAuthenticated(false);
@@ -61,23 +62,18 @@ function App() {
       <Routes>
         <Route path="/signin" element={isAuthenticated ? (<Navigate to="/" />) : (<Signin login={login} />)} />
         <Route path="/signup" element={isAuthenticated ? (<Navigate to="/" />) : (<Signup />)} />
-        {/* <Route path="/dashboard" element={isAuthenticated ? (<Dashboard />) : (<Navigate to="/signin" />)} /> */}
-
-        <Route path="/dashboard" element={isAuthenticated === null ? (<p>Chargement...</p>) : isAuthenticated ? (<Dashboard />) : (<Navigate to="/signin" />)} />
-
-
+        <Route path="/dashboard" element={isAuthenticated ? (<Dashboard />) : (<Navigate to="/signin" />)} />
         <Route path="/profile" element={isAuthenticated ? (<Profile />) : (<Navigate to="/signin" />)} />
         <Route path="/update-profile" element={isAuthenticated ? (<UpdateProfile />) : (<Navigate to="/signin" />)} />
         <Route path="/update-password" element={isAuthenticated ? (<UpdatePassword />) : (<Navigate to="/signin" />)} />
         <Route path="/listes-des-livres" element={<Books />} />
         <Route path="/" element={<Home />} />
 
-        {/* Routes Admin protégées */}
+        {/* 🔒 Routes protégées pour l'admin */}
         <Route path="/admin/dashboard" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><AdminDashboard /></AdminRoute>} />
         <Route path="/admin/users" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageUsers /></AdminRoute>} />
         <Route path="/admin/categories" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageCategories /></AdminRoute>} />
         <Route path="/admin/products" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageProducts /></AdminRoute>} />
-
         <Route path="/admin/users/edit/:userId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><EditUser /></AdminRoute>} />
         <Route path="/admin/users/view/:userId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ViewUser /></AdminRoute>} />
       </Routes>
