@@ -70,6 +70,15 @@ function App() {
         <Route path="/admin/users" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageUsers /></AdminRoute>} />
         <Route path="/admin/categories" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageCategories /></AdminRoute>} />
         <Route path="/admin/products" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageProducts /></AdminRoute>} />
+
+        <Route
+          path="/admin/users/edit/:userId"
+          element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><EditUser /></AdminRoute>}
+        />
+        <Route
+          path="/admin/users/view/:userId"
+          element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ViewUser /></AdminRoute>}
+        />
       </Routes>
     </BrowserRouter>
   );
