@@ -8,19 +8,26 @@ const Navbar = ({ isAuthenticated, logout }) => {
   const menuRef = useRef(); // Référence pour le menu déroulant
 
   useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
+    const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem('token');
+  
+    if (storedUser && storedToken) {
+      try {
         const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser); // Plus de `.user`
-      } else {
-        console.warn("Aucun utilisateur trouvé dans le localStorage.");
+        setIsAuthenticated(true);
+        setUserRole(parsedUser.role);
+      } catch (error) {
+        console.error("Erreur lors du parsing de 'user' :", error);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        setIsAuthenticated(false);
+        setUserRole(null);
       }
-    } catch (error) {
-      console.error("Erreur lors du parsing de 'user' :", error);
-      localStorage.removeItem("user");
+    } else {
+      setIsAuthenticated(false);
+      setUserRole(null);
     }
-  }, []);
+  }, []);  
 
   const handleLogout = () => {
     logout();
