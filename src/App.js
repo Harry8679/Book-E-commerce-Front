@@ -61,7 +61,11 @@ function App() {
       <Routes>
         <Route path="/signin" element={isAuthenticated ? (<Navigate to="/" />) : (<Signin login={login} />)} />
         <Route path="/signup" element={isAuthenticated ? (<Navigate to="/" />) : (<Signup />)} />
-        <Route path="/dashboard" element={isAuthenticated ? (<Dashboard />) : (<Navigate to="/signin" />)} />
+        {/* <Route path="/dashboard" element={isAuthenticated ? (<Dashboard />) : (<Navigate to="/signin" />)} /> */}
+
+        <Route path="/dashboard" element={isAuthenticated === null ? (<p>Chargement...</p>) : isAuthenticated ? (<Dashboard />) : (<Navigate to="/signin" />)} />
+
+
         <Route path="/profile" element={isAuthenticated ? (<Profile />) : (<Navigate to="/signin" />)} />
         <Route path="/update-profile" element={isAuthenticated ? (<UpdateProfile />) : (<Navigate to="/signin" />)} />
         <Route path="/update-password" element={isAuthenticated ? (<UpdatePassword />) : (<Navigate to="/signin" />)} />
