@@ -58,8 +58,17 @@ const EditUser = () => {
         }
       );
 
-      toast.success("Utilisateur mis à jour avec succès !");
-      navigate('/admin/users');
+      // ✅ Notification avec le nom de l'utilisateur modifié
+      toast.success(`L'utilisateur ${user.name} a été modifié avec succès !`, {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+
+      // ✅ Redirection après un court délai
+      setTimeout(() => {
+        navigate('/admin/users');
+      }, 3000); // Redirection après 3 secondes
+
     } catch (err) {
       console.error('Erreur de mise à jour :', err);
       toast.error("Erreur lors de la mise à jour de l'utilisateur.");
