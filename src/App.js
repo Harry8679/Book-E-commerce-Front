@@ -15,6 +15,8 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageUsers from './pages/admin/MangeUsers';
 import ManageCategories from './pages/admin/ManageCategories';
 import ManageProducts from './pages/admin/ManageProducts';
+import EditUser from './pages/admin/EditUser';
+import ViewUser from './pages/admin/ViewUser';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
