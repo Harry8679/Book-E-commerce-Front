@@ -15,19 +15,29 @@ const EditUser = () => {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:8008/api/v1/users/${userId}`, {
+
+        if (!token) {
+          toast.error("Token manquant. Veuillez vous reconnecter.");
+          navigate('/signin');
+          return;
+        }
+
+        // ✅ Correction de l'URL
+        const response = await axios.get(`http://localhost:8008/api/v1/users/user/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         setUser(response.data);
-        setLoading(false);
       } catch (err) {
         console.error('Erreur de récupération :', err);
         toast.error("Impossible de récupérer les données de l'utilisateur.");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUser();
-  }, [userId]);
+  }, [userId, navigate]);
 
   // 🔄 Soumettre la mise à jour
   const handleSubmit = async (e) => {
@@ -35,10 +45,17 @@ const EditUser = () => {
 
     try {
       const token = localStorage.getItem('token');
+
       await axios.put(
         `http://localhost:8008/api/v1/users/users/${userId}/admin-update-user`,
-        { name: user.name, email: user.email, role: user.role },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       toast.success("Utilisateur mis à jour avec succès !");
@@ -55,7 +72,7 @@ const EditUser = () => {
       <h1 className="text-2xl font-bold text-teal-600 mb-4">Modifier l'utilisateur</h1>
 
       {loading ? (
-        <p>Chargement...</p>
+        <p>Chargement des données...</p>
       ) : (
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md">
           <div className="mb-4">
@@ -83,8 +100,8 @@ const EditUser = () => {
           <div className="mb-4">
             <label className="block mb-2">Rôle</label>
             <select
-              value={user.role}
-              onChange={(e) => setUser({ ...user, role: e.target.value })}
+              value={parseInt(user.role)} // ✅ Conversion explicite en nombre
+              onChange={(e) => setUser({ ...user, role: parseInt(e.target.value) })}
               className="w-full px-4 py-2 border rounded"
             >
               <option value={0}>Utilisateur</option>
