@@ -21,8 +21,9 @@ import ViewUser from './pages/admin/ViewUser';
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const [loading, setLoading] = useState(true);  // ✅ Nouvel état pour le chargement
 
-  // ✅ Vérifier l'état de connexion au chargement de l'application
+  // ✅ Vérifier l'état de connexion
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
@@ -35,6 +36,8 @@ function App() {
       setIsAuthenticated(false);
       setUserRole(null);
     }
+
+    setLoading(false);  // ✅ Indiquer que la vérification est terminée
   }, []);
 
   // ✅ Connexion de l'utilisateur
@@ -55,6 +58,11 @@ function App() {
     setIsAuthenticated(false);
     setUserRole(null);
   };
+
+  if (loading) {
+    // ✅ Afficher un écran de chargement avant de vérifier les routes
+    return <p className="text-center mt-10 text-lg">Chargement...</p>;
+  }
 
   return (
     <BrowserRouter>
