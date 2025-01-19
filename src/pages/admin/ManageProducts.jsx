@@ -12,7 +12,7 @@ const ManageProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8008/api/v1/products');
+        const response = await axios.get('http://localhost:8008/api/v1/products/all');
         setProducts(response.data);
       } catch (err) {
         console.error('Erreur lors de la récupération des produits :', err);
