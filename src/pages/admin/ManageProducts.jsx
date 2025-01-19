@@ -63,11 +63,9 @@ const ManageProducts = () => {
             {products.map((product) => (
               <tr key={product._id}>
                 <td className="py-2 px-4 border-b">
-                  {product.photo ? (
+                  {product.imageUrl ? (
                     <img
-                      src={`data:${product.photo.contentType};base64,${btoa(
-                        String.fromCharCode(...new Uint8Array(product.photo.data.data))
-                      )}`}
+                      src={product.imageUrl} // Utilisation de `imageUrl` fourni par le backend
                       alt={product.name}
                       className="w-16 h-16 object-cover"
                     />
