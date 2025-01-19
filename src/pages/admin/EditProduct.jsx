@@ -1,53 +1,150 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditProduct = () => {
-  const { productId } = useParams();
-  const [product, setProduct] = useState({});
+  const { productId } = useParams(); // Récupérer l'ID du produit depuis l'URL
+  const [product, setProduct] = useState({ name: '', description: '', price: '', quantity: '', category: '', shipping: false });
   const [photo, setPhoto] = useState(null);
+  const navigate = useNavigate();
 
+  // Charger les données du produit
   useEffect(() => {
-    fetchProduct();
-  }, []);
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8008/api/v1/products/${productId}`);
+        setProduct(response.data);
+      } catch (err) {
+        console.error('Erreur de récupération du produit :', err);
+        toast.error("Impossible de récupérer les données du produit.");
+      }
+    };
 
-  const fetchProduct = async () => {
-    try {
-      const res = await axios.get(`http://localhost:8008/api/v1/products/${productId}`);
-      setProduct(res.data);
-    } catch (err) {
-      console.error('Erreur lors du chargement du produit:', err);
-    }
+    fetchProduct();
+  }, [productId]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProduct({ ...product, [name]: value });
+  };
+
+  const handlePhoto = (e) => {
+    setPhoto(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('name', product.name);
-    formData.append('description', product.description);
-    formData.append('price', product.price);
-    formData.append('category', product.category);
-    if (photo) formData.append('photo', photo);
 
     try {
-      await axios.put(`http://localhost:8008/api/v1/products/${productId}/adminId`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      alert('Produit mis à jour avec succès');
+      const token = localStorage.getItem('token');
+      const formData = new FormData();
+      Object.keys(product).forEach((key) => formData.append(key, product[key]));
+      if (photo) formData.append('photo', photo);
+
+      await axios.put(
+        `http://localhost:8008/api/v1/products/${productId}/${JSON.parse(localStorage.getItem('user'))._id}`,
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      toast.success('Produit mis à jour avec succès !');
+      navigate('/admin/products');
     } catch (err) {
-      console.error('Erreur lors de la mise à jour:', err);
+      console.error('Erreur lors de la mise à jour du produit :', err);
+      toast.error('Erreur lors de la mise à jour du produit.');
     }
   };
 
   return (
-    <div>
-      <h1>Modifier le Produit</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="text" value={product.name || ''} onChange={(e) => setProduct({ ...product, name: e.target.value })} />
-        <textarea value={product.description || ''} onChange={(e) => setProduct({ ...product, description: e.target.value })} />
-        <input type="number" value={product.price || ''} onChange={(e) => setProduct({ ...product, price: e.target.value })} />
-        <input type="file" onChange={(e) => setPhoto(e.target.files[0])} />
-        <button type="submit">Modifier</button>
+    <div className="container mx-auto py-8">
+      <ToastContainer />
+      <h1 className="text-2xl font-bold text-teal-600 mb-4">Modifier le Produit</h1>
+
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md">
+        <div className="mb-4">
+          <label className="block mb-2">Nom</label>
+          <input
+            type="text"
+            name="name"
+            value={product.name}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-2">Description</label>
+          <textarea
+            name="description"
+            value={product.description}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-2">Prix</label>
+          <input
+            type="number"
+            name="price"
+            value={product.price}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-2">Quantité</label>
+          <input
+            type="number"
+            name="quantity"
+            value={product.quantity}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-2">Catégorie</label>
+          <input
+            type="text"
+            name="category"
+            value={product.category}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-2">Expédition</label>
+          <select
+            name="shipping"
+            value={product.shipping}
+            onChange={(e) => setProduct({ ...product, shipping: e.target.value === 'true' })}
+            className="w-full px-4 py-2 border rounded"
+          >
+            <option value={false}>Non</option>
+            <option value={true}>Oui</option>
+          </select>
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-2">Photo</label>
+          <input type="file" accept="image/*" onChange={handlePhoto} className="w-full px-4 py-2" />
+        </div>
+
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Mettre à jour le produit
+        </button>
       </form>
     </div>
   );
