@@ -20,6 +20,8 @@ import ViewUser from './pages/admin/ViewUser';
 import CreateCategory from './pages/admin/CreateCategory';
 import EditCategory from './pages/admin/EditCategory';
 import ViewCategory from './pages/admin/ViewCategory';
+import EditProduct from './pages/admin/EditProduct';
+import ViewProduct from './pages/admin/ViewProduct';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -89,6 +91,11 @@ function App() {
         <Route path="/admin/categories/create" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><CreateCategory /></AdminRoute>} />
         <Route path="/admin/categories/edit/:categoryId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><EditCategory /></AdminRoute>} />
         <Route path="/admin/categories/view/:categoryId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ViewCategory /></AdminRoute>} />
+
+        {/* 🆕 Routes pour les produits */}
+        <Route path="/admin/products/edit/:productId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><EditProduct /></AdminRoute>} />
+        <Route path="/admin/products/view/:productId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ViewProduct /></AdminRoute>} />
+
       </Routes>
     </BrowserRouter>
 
