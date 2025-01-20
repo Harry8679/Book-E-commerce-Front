@@ -1,10 +1,8 @@
-import React from 'react';
-
 const Book = ({ product }) => {
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden">
       <img
-        src={product.imageUrl}
+        src={product.imageUrl} // Utilisation du champ `imageUrl`
         alt={product.name}
         className="w-full h-48 object-cover"
       />

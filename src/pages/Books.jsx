@@ -16,13 +16,14 @@ const Books = () => {
       const response = await axios.get(
         `http://localhost:8008/api/v1/products?search=${search}&sortBy=${sortBy}&order=${order}`
       );
+      console.log('Produits récupérés :', response.data); // Vérifiez les données ici
       setProducts(response.data);
     } catch (err) {
       console.error('Erreur lors de la récupération des produits :', err);
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   useEffect(() => {
     fetchProducts();
