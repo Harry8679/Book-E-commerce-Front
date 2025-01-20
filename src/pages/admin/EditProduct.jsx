@@ -7,8 +7,24 @@ import 'react-toastify/dist/ReactToastify.css';
 const EditProduct = () => {
   const { productId } = useParams(); // Récupérer l'ID du produit depuis l'URL
   const [product, setProduct] = useState({ name: '', description: '', price: '', quantity: '', category: '', shipping: false });
+  const [categories, setCategories] = useState([]);
   const [photo, setPhoto] = useState(null);
   const navigate = useNavigate();
+
+  // Charger les catégories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:8008/api/v1/categories');
+        setCategories(response.data);
+      } catch (err) {
+        console.error('Erreur de récupération des catégories :', err);
+        toast.error('Impossible de récupérer les catégories.');
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // Charger les données du produit
   useEffect(() => {
@@ -111,14 +127,20 @@ const EditProduct = () => {
 
         <div className="mb-4">
           <label className="block mb-2">Catégorie</label>
-          <input
-            type="text"
+          <select
             name="category"
             value={product.category}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded"
             required
-          />
+          >
+            <option value="">Sélectionner une catégorie</option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="mb-4">
@@ -139,12 +161,21 @@ const EditProduct = () => {
           <input type="file" accept="image/*" onChange={handlePhoto} className="w-full px-4 py-2" />
         </div>
 
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Mettre à jour le produit
-        </button>
+        <div className="flex justify-between">
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Mettre à jour le produit
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/admin/products')}
+            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+          >
+            Retour à la liste
+          </button>
+        </div>
       </form>
     </div>
   );
