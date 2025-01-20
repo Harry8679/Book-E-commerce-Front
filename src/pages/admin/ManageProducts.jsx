@@ -7,28 +7,23 @@ import 'react-toastify/dist/ReactToastify.css';
 const ManageProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [sortBy, setSortBy] = useState('_id');
-  const [order, setOrder] = useState('asc');
   const navigate = useNavigate();
 
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8008/api/v1/products?search=${search}&sortBy=${sortBy}&order=${order}`
-      );
-      setProducts(response.data);
-    } catch (err) {
-      console.error('Erreur lors de la récupération des produits :', err);
-      toast.error('Impossible de récupérer les produits.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('http://localhost:8008/api/v1/products/all');
+        setProducts(response.data);
+      } catch (err) {
+        console.error('Erreur lors de la récupération des produits :', err);
+        toast.error('Impossible de récupérer les produits.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProducts();
-  }, [search, sortBy, order]);
+  }, []);
 
   const handleDelete = async (productId) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
@@ -51,46 +46,12 @@ const ManageProducts = () => {
       <ToastContainer />
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-teal-600">Gestion des Produits</h1>
+        {/* Bouton pour créer un produit */}
         <button
           onClick={() => navigate('/admin/products/create')}
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
         >
           Ajouter un Produit
-        </button>
-      </div>
-
-      {/* Barre de recherche et filtres */}
-      <div className="flex items-center space-x-4 mb-4">
-        <input
-          type="text"
-          placeholder="Rechercher un produit..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border px-4 py-2 rounded w-full"
-        />
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="border px-4 py-2 rounded"
-        >
-          <option value="_id">Par défaut</option>
-          <option value="name">Nom</option>
-          <option value="price">Prix</option>
-          <option value="sold">Produits vendus</option>
-        </select>
-        <select
-          value={order}
-          onChange={(e) => setOrder(e.target.value)}
-          className="border px-4 py-2 rounded"
-        >
-          <option value="asc">Ascendant</option>
-          <option value="desc">Descendant</option>
-        </select>
-        <button
-          onClick={fetchProducts}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Appliquer
         </button>
       </div>
 
@@ -113,7 +74,7 @@ const ManageProducts = () => {
                 <td className="py-2 px-4 border-b">
                   {product.imageUrl ? (
                     <img
-                      src={product.imageUrl}
+                      src={product.imageUrl} // Utilisation de `imageUrl` fourni par le backend
                       alt={product.name}
                       className="w-16 h-16 object-cover"
                     />
