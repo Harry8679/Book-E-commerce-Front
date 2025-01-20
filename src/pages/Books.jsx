@@ -14,7 +14,7 @@ const Books = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8008/api/v1/products?search=${search}&sortBy=${sortBy}&order=${order}`
+        `http://localhost:8008/api/v1/products/all?search=${search}&sortBy=${sortBy}&order=${order}`
       );
       console.log('Produits récupérés :', response.data); // Vérifiez les données ici
       setProducts(response.data);
