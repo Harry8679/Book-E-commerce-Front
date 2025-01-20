@@ -68,7 +68,6 @@ const EditUser = () => {
       setTimeout(() => {
         navigate('/admin/users');
       }, 3000); // Redirection après 3 secondes
-
     } catch (err) {
       console.error('Erreur de mise à jour :', err);
       toast.error("Erreur lors de la mise à jour de l'utilisateur.");
@@ -118,12 +117,21 @@ const EditUser = () => {
             </select>
           </div>
 
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          >
-            Enregistrer
-          </button>
+          <div className="flex justify-between">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              Enregistrer
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/admin/users')}
+              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+            >
+              Retour à la liste
+            </button>
+          </div>
         </form>
       )}
     </div>
