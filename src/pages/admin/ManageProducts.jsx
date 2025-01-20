@@ -44,7 +44,16 @@ const ManageProducts = () => {
   return (
     <div className="container mx-auto py-8">
       <ToastContainer />
-      <h1 className="text-2xl font-bold text-teal-600 mb-4">Gestion des Produits</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold text-teal-600">Gestion des Produits</h1>
+        {/* Bouton pour créer un produit */}
+        <button
+          onClick={() => navigate('/admin/products/create')}
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Ajouter un Produit
+        </button>
+      </div>
 
       {loading ? (
         <p>Chargement des produits...</p>
