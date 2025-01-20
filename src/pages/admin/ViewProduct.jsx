@@ -30,15 +30,11 @@ const ViewProduct = () => {
           <p><strong>Quantité :</strong> {product.quantity}</p>
           <p><strong>Catégorie :</strong> {product.category?.name || 'N/A'}</p>
           <p><strong>Expédition :</strong> {product.shipping ? 'Oui' : 'Non'}</p>
-          {product.photo && (
-            <img
-              src={`data:${product.photo.contentType};base64,${btoa(
-                String.fromCharCode(...new Uint8Array(product.photo.data.data))
-              )}`}
-              alt={product.name}
-              className="w-64 h-64 object-cover"
-            />
-          )}
+          <img
+            src={`http://localhost:8008/api/v1/products/photo/${productId}`}
+            alt={product.name}
+            className="w-64 h-64 object-cover mt-4"
+          />
         </div>
       ) : (
         <p>Chargement...</p>
