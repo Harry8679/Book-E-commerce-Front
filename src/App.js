@@ -32,15 +32,11 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   // 🛒 Gestion du panier
-  const [cartItems, setCartItems] = useState([]);
-
-  // Charger le panier depuis le local storage au montage
-  useEffect(() => {
+  const [cartItems, setCartItems] = useState(() => {
+    // Charger le panier depuis le local storage au premier rendu
     const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      setCartItems(JSON.parse(savedCart));
-    }
-  }, []);
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
 
   // Sauvegarder le panier dans le local storage lorsque le panier change
   useEffect(() => {
