@@ -23,13 +23,14 @@ import ViewCategory from './pages/admin/ViewCategory';
 import EditProduct from './pages/admin/EditProduct';
 import ViewProduct from './pages/admin/ViewProduct';
 import CreateProduct from './pages/admin/CreateProduct';
+import ProductDetails from './pages/ProductDetails'; // Nouvelle page pour les détails des produits
+import Cart from './pages/Cart'; // Nouvelle page pour le panier
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
-  const [loading, setLoading] = useState(true);  // ✅ Nouvel état pour le chargement
+  const [loading, setLoading] = useState(true);
 
-  // ✅ Vérifier l'état de connexion
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
@@ -43,10 +44,9 @@ function App() {
       setUserRole(null);
     }
 
-    setLoading(false);  // ✅ Indiquer que la vérification est terminée
+    setLoading(false);
   }, []);
 
-  // ✅ Connexion de l'utilisateur
   const login = (user, token) => {
     if (user && token) {
       localStorage.setItem('token', token);
@@ -58,7 +58,6 @@ function App() {
     }
   };
 
-  // ✅ Déconnexion de l'utilisateur
   const logout = () => {
     localStorage.clear();
     setIsAuthenticated(false);
@@ -66,7 +65,6 @@ function App() {
   };
 
   if (loading) {
-    // ✅ Afficher un écran de chargement avant de vérifier les routes
     return <p className="text-center mt-10 text-lg">Chargement...</p>;
   }
 
@@ -82,28 +80,25 @@ function App() {
         <Route path="/update-password" element={isAuthenticated ? (<UpdatePassword />) : (<Navigate to="/signin" />)} />
         <Route path="/listes-des-livres" element={<Books />} />
         <Route path="/" element={<Home />} />
+        <Route path="/books/:productId" element={<ProductDetails />} /> {/* Route pour les détails des produits */}
+        <Route path="/cart" element={<Cart />} /> {/* Route pour le panier */}
 
-        {/* 🔒 Routes protégées pour l'admin */}
         <Route path="/admin/dashboard" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><AdminDashboard /></AdminRoute>} />
         <Route path="/admin/users" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageUsers /></AdminRoute>} />
         <Route path="/admin/users/edit/:userId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><EditUser /></AdminRoute>} />
         <Route path="/admin/users/view/:userId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ViewUser /></AdminRoute>} />
-        
-        {/* 🆕 Routes pour les catégories */}
+
         <Route path="/admin/categories" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageCategories /></AdminRoute>} />
         <Route path="/admin/categories/create" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><CreateCategory /></AdminRoute>} />
         <Route path="/admin/categories/edit/:categoryId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><EditCategory /></AdminRoute>} />
         <Route path="/admin/categories/view/:categoryId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ViewCategory /></AdminRoute>} />
 
-        {/* 🆕 Routes pour les produits */}
         <Route path="/admin/products" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageProducts /></AdminRoute>} />
         <Route path="/admin/products/create" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><CreateProduct /></AdminRoute>} />
         <Route path="/admin/products/edit/:productId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><EditProduct /></AdminRoute>} />
         <Route path="/admin/products/view/:productId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ViewProduct /></AdminRoute>} />
-
       </Routes>
     </BrowserRouter>
-
   );
 }
 
