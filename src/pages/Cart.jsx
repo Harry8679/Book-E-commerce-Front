@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 const Cart = ({ cartItems, removeFromCart }) => {
   const navigate = useNavigate();
 
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0);
+  // Vérifiez si `cartItems` est défini avant d'appliquer `reduce`
+  const totalPrice = cartItems?.reduce((sum, item) => sum + item.price, 0) || 0;
 
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold">Votre Panier</h1>
-      {cartItems.length > 0 ? (
+      {cartItems?.length > 0 ? (
         <>
           <table className="min-w-full bg-white mt-6">
             <thead>
