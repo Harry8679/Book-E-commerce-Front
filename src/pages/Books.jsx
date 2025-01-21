@@ -4,27 +4,29 @@ import Layout from '../components/Layout';
 import Book from '../components/Book';
 import Sidebar from '../components/Sidebar';
 
-const Books = () => {
+const Books = ({ addToCart }) => {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('_id');
   const [order, setOrder] = useState('asc');
   const [loading, setLoading] = useState(true);
 
+  // Fonction pour récupérer les produits
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
         `http://localhost:8008/api/v1/products/all?search=${search}&sortBy=${sortBy}&order=${order}`
       );
-      console.log('Produits récupérés :', response.data); // Vérifiez les données ici
+      console.log('Produits récupérés :', response.data);
       setProducts(response.data);
     } catch (err) {
       console.error('Erreur lors de la récupération des produits :', err);
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
+  // Charger les produits lors de l'initialisation ou des mises à jour des filtres
   useEffect(() => {
     fetchProducts();
   }, [search, sortBy, order]);
@@ -48,7 +50,9 @@ const Books = () => {
         {loading ? (
           <p>Chargement des livres...</p>
         ) : products.length > 0 ? (
-          products.map((product) => <Book key={product._id} product={product} />)
+          products.map((product) => (
+            <Book key={product._id} product={product} addToCart={addToCart} />
+          ))
         ) : (
           <p>Aucun produit trouvé.</p>
         )}
