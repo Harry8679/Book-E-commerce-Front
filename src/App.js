@@ -34,6 +34,20 @@ function App() {
   // 🛒 Gestion du panier
   const [cartItems, setCartItems] = useState([]);
 
+  // Charger le panier depuis le local storage au montage
+  useEffect(() => {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart));
+    }
+  }, []);
+
+  // Sauvegarder le panier dans le local storage lorsque le panier change
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  // Vérification de l'authentification
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
@@ -56,12 +70,12 @@ function App() {
       const isProductInCart = prevItems.find((item) => item._id === product._id);
 
       if (isProductInCart) {
-        // Augmentez la quantité si le produit est déjà dans le panier
+        // Augmenter la quantité si le produit est déjà dans le panier
         return prevItems.map((item) =>
           item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
         );
       } else {
-        // Ajoutez un nouveau produit au panier
+        // Ajouter un nouveau produit au panier
         return [...prevItems, { ...product, quantity: 1 }];
       }
     });
@@ -70,18 +84,6 @@ function App() {
   // Fonction pour supprimer un produit du panier
   const removeFromCart = (productId) => {
     setCartItems((prevItems) => prevItems.filter((item) => item._id !== productId));
-  };
-
-  // Fonction pour se connecter
-  const login = (user, token) => {
-    if (user && token) {
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      setIsAuthenticated(true);
-      setUserRole(user.role);
-    } else {
-      console.error("Erreur : Données utilisateur ou token manquantes");
-    }
   };
 
   // Fonction pour augmenter la quantité d'un produit dans le panier
@@ -104,6 +106,18 @@ function App() {
         )
         .filter((item) => item.quantity > 0) // Supprimez l'article si la quantité atteint 0
     );
+  };
+
+  // Fonction pour se connecter
+  const login = (user, token) => {
+    if (user && token) {
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      setIsAuthenticated(true);
+      setUserRole(user.role);
+    } else {
+      console.error("Erreur : Données utilisateur ou token manquantes");
+    }
   };
 
   // Fonction pour se déconnecter
@@ -132,8 +146,14 @@ function App() {
         <Route path="/listes-des-livres" element={<Books addToCart={addToCart} />} />
         <Route path="/" element={<Home />} />
         <Route path="/books/:productId" element={<ProductDetails />} />
-        {/* <Route path="/cart" element={<Cart cartItems={cartItems} removeFromCart={removeFromCart} />}/> */}
-        <Route path="/cart" element={<Cart cartItems={cartItems} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} removeFromCart={removeFromCart} />}/>
+        <Route path="/cart" element={
+          <Cart
+            cartItems={cartItems}
+            increaseQuantity={increaseQuantity}
+            decreaseQuantity={decreaseQuantity}
+            removeFromCart={removeFromCart}
+          />
+        } />
 
         {/* Routes Admin */}
         <Route path="/admin/dashboard" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><AdminDashboard /></AdminRoute>}/>
