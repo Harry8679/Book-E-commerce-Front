@@ -101,135 +101,30 @@ function App() {
       <Navbar isAuthenticated={isAuthenticated} logout={logout} cartItems={cartItems} />
       <Routes>
         {/* Routes publiques */}
-        <Route
-          path="/signin"
-          element={isAuthenticated ? <Navigate to="/" /> : <Signin login={login} />}
-        />
-        <Route
-          path="/signup"
-          element={isAuthenticated ? <Navigate to="/" /> : <Signup />}
-        />
-        <Route
-          path="/dashboard"
-          element={isAuthenticated ? <Dashboard /> : <Navigate to="/signin" />}
-        />
-        <Route
-          path="/profile"
-          element={isAuthenticated ? <Profile /> : <Navigate to="/signin" />}
-        />
-        <Route
-          path="/update-profile"
-          element={isAuthenticated ? <UpdateProfile /> : <Navigate to="/signin" />}
-        />
-        <Route
-          path="/update-password"
-          element={isAuthenticated ? <UpdatePassword /> : <Navigate to="/signin" />}
-        />
+        <Route path="/signin" element={isAuthenticated ? <Navigate to="/" /> : <Signin login={login} />}/>
+        <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <Signup />}/>
+        <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/signin" />}/>
+        <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/signin" />}/>
+        <Route path="/update-profile" element={isAuthenticated ? <UpdateProfile /> : <Navigate to="/signin" />}/>
+        <Route path="/update-password" element={isAuthenticated ? <UpdatePassword /> : <Navigate to="/signin" />}/>
         <Route path="/listes-des-livres" element={<Books addToCart={addToCart} />} />
         <Route path="/" element={<Home />} />
         <Route path="/books/:productId" element={<ProductDetails />} />
-        <Route
-          path="/cart"
-          element={<Cart cartItems={cartItems} removeFromCart={removeFromCart} />}
-        />
+        <Route path="/cart" element={<Cart cartItems={cartItems} removeFromCart={removeFromCart} />}/>
 
         {/* Routes Admin */}
-        <Route
-          path="/admin/dashboard"
-          element={
-            <AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <AdminDashboard />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/users"
-          element={
-            <AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <ManageUsers />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/users/edit/:userId"
-          element={
-            <AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <EditUser />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/users/view/:userId"
-          element={
-            <AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <ViewUser />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/categories"
-          element={
-            <AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <ManageCategories />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/categories/create"
-          element={
-            <AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <CreateCategory />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/categories/edit/:categoryId"
-          element={
-            <AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <EditCategory />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/categories/view/:categoryId"
-          element={
-            <AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <ViewCategory />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/products"
-          element={
-            <AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <ManageProducts />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/products/create"
-          element={
-            <AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <CreateProduct />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/products/edit/:productId"
-          element={
-            <AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <EditProduct />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/products/view/:productId"
-          element={
-            <AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <ViewProduct />
-            </AdminRoute>
-          }
-        />
+        <Route path="/admin/dashboard" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><AdminDashboard /></AdminRoute>}/>
+        <Route path="/admin/users" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageUsers /></AdminRoute>}/>
+        <Route path="/admin/users/edit/:userId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><EditUser /></AdminRoute>}/>
+        <Route path="/admin/users/view/:userId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ViewUser /></AdminRoute>}/>
+        <Route path="/admin/categories" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageCategories /></AdminRoute>}/>
+        <Route path="/admin/categories/create" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><CreateCategory /></AdminRoute>}/>
+        <Route path="/admin/categories/edit/:categoryId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><EditCategory /></AdminRoute>}/>
+        <Route path="/admin/categories/view/:categoryId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ViewCategory /></AdminRoute>}/>
+        <Route path="/admin/products" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ManageProducts /></AdminRoute>}/>
+        <Route path="/admin/products/create" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><CreateProduct /></AdminRoute>}/>
+        <Route path="/admin/products/edit/:productId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><EditProduct /></AdminRoute>}/>
+        <Route path="/admin/products/view/:productId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ViewProduct /></AdminRoute>} />
       </Routes>
     </BrowserRouter>
   );
