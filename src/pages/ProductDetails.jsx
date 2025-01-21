@@ -8,8 +8,19 @@ const ProductDetails = ({ addToCart }) => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const response = await axios.get(`http://localhost:8008/api/v1/products/${productId}`);
-      setProduct(response.data);
+      try {
+        const response = await axios.get(`http://localhost:8008/api/v1/products/${productId}`);
+        const productData = response.data;
+
+        // Générer l'URL de l'image si elle n'est pas présente
+        if (!productData.imageUrl) {
+          productData.imageUrl = `http://localhost:8008/api/v1/products/photo/${productData._id}`;
+        }
+
+        setProduct(productData);
+      } catch (error) {
+        console.error('Erreur lors de la récupération du produit :', error);
+      }
     };
     fetchProduct();
   }, [productId]);
