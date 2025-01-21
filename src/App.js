@@ -84,6 +84,28 @@ function App() {
     }
   };
 
+  // Fonction pour augmenter la quantité d'un produit dans le panier
+  const increaseQuantity = (productId) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item._id === productId ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
+  };
+
+  // Fonction pour diminuer la quantité d'un produit dans le panier
+  const decreaseQuantity = (productId) => {
+    setCartItems((prevItems) =>
+      prevItems
+        .map((item) =>
+          item._id === productId
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0) // Supprimez l'article si la quantité atteint 0
+    );
+  };
+
   // Fonction pour se déconnecter
   const logout = () => {
     localStorage.clear();
@@ -110,7 +132,8 @@ function App() {
         <Route path="/listes-des-livres" element={<Books addToCart={addToCart} />} />
         <Route path="/" element={<Home />} />
         <Route path="/books/:productId" element={<ProductDetails />} />
-        <Route path="/cart" element={<Cart cartItems={cartItems} removeFromCart={removeFromCart} />}/>
+        {/* <Route path="/cart" element={<Cart cartItems={cartItems} removeFromCart={removeFromCart} />}/> */}
+        <Route path="/cart" element={<Cart cartItems={cartItems} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} removeFromCart={removeFromCart} />}/>
 
         {/* Routes Admin */}
         <Route path="/admin/dashboard" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><AdminDashboard /></AdminRoute>}/>
