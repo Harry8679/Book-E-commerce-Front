@@ -1,5 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+// Font Awesome imports
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartPlus, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 const Book = ({ product, addToCart }) => {
   const navigate = useNavigate();
@@ -18,17 +21,19 @@ const Book = ({ product, addToCart }) => {
         <p className="text-gray-600">{product.description.substring(0, 25)}...</p>
         <p className="text-teal-500 font-semibold">{product.price} €</p>
         <div className="flex justify-between mt-4">
+          {/* Icon for adding to cart */}
           <button
             onClick={() => addToCart(product)}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 flex items-center"
+            className="text-teal-500 hover:text-teal-600"
           >
-            <i className="fas fa-cart-plus mr-2"></i> Ajouter au panier
+            <FontAwesomeIcon icon={faCartPlus} className="text-xl" />
           </button>
+
+          {/* Icon for product details */}
           <button
             onClick={() => navigate(`/books/${product._id}`)}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center"
-          >
-            <i className="fas fa-info-circle mr-2"></i> Voir détails
+            className="text-blue-500 hover:text-blue-600"
+          >Voir <FontAwesomeIcon icon={faInfoCircle} className="text-xl" />
           </button>
         </div>
       </div>
