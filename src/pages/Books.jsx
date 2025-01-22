@@ -13,7 +13,6 @@ const Books = ({ addToCart }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Fonction pour récupérer les produits avec pagination
   const fetchProducts = async () => {
     setLoading(true);
     try {
@@ -21,9 +20,8 @@ const Books = ({ addToCart }) => {
         `http://localhost:8008/api/v1/products/all/paginated?search=${search}&sortBy=${sortBy}&order=${order}&limit=6&page=${currentPage}`
       );
 
-      console.log('Produits récupérés :', response.data);
-      setProducts(response.data.products); // Met à jour la liste des produits
-      setTotalPages(response.data.totalPages); // Met à jour le nombre total de pages
+      setProducts(response.data.products);
+      setTotalPages(response.data.totalPages);
     } catch (err) {
       console.error('Erreur lors de la récupération des produits :', err);
     } finally {
@@ -31,7 +29,6 @@ const Books = ({ addToCart }) => {
     }
   };
 
-  // Charger les produits lors de l'initialisation ou des mises à jour des filtres/pagination
   useEffect(() => {
     fetchProducts();
   }, [search, sortBy, order, currentPage]);
@@ -69,7 +66,11 @@ const Books = ({ addToCart }) => {
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((prev) => prev - 1)}
-            className="px-4 py-2 bg-gray-300 text-gray-700 rounded-l hover:bg-gray-400 disabled:opacity-50"
+            className={`px-4 py-2 rounded-l ${
+              currentPage === 1
+                ? 'bg-teal-300 text-white cursor-not-allowed'
+                : 'bg-teal-500 text-white hover:bg-teal-600'
+            }`}
           >
             Précédent
           </button>
@@ -79,7 +80,11 @@ const Books = ({ addToCart }) => {
           <button
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((prev) => prev + 1)}
-            className="px-4 py-2 bg-gray-300 text-gray-700 rounded-r hover:bg-gray-400 disabled:opacity-50"
+            className={`px-4 py-2 rounded-r ${
+              currentPage === totalPages
+                ? 'bg-teal-300 text-white cursor-not-allowed'
+                : 'bg-teal-500 text-white hover:bg-teal-600'
+            }`}
           >
             Suivant
           </button>
