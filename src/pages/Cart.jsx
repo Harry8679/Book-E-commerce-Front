@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart }) => {
   const navigate = useNavigate();
@@ -19,6 +20,45 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
   // Fermer le modal
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  // Fonction pour créer une commande
+  const createOrder = async (paymentMethod) => {
+    const products = cartItems.map((item) => ({
+      product: item._id,
+      quantity: item.quantity,
+      price: item.price,
+    }));
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8008/api/v1/orders/create',
+        {
+          products,
+          totalPrice,
+          paymentMethod,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+
+      console.log('Commande créée avec succès :', response.data);
+
+      // Naviguer vers la page de confirmation de paiement ou la page suivante
+      if (paymentMethod === 'paypal') {
+        navigate('/checkout/paypal');
+      } else if (paymentMethod === 'card') {
+        navigate('/checkout/card');
+      }
+
+      closeModal(); // Fermer le modal après avoir créé la commande
+    } catch (error) {
+      console.error('Erreur lors de la création de la commande :', error);
+      alert('Une erreur est survenue lors de la création de la commande.');
+    }
   };
 
   return (
@@ -98,19 +138,13 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
                 </h2>
                 <div className="flex flex-col space-y-4">
                   <button
-                    onClick={() => {
-                      navigate('/checkout/paypal');
-                      closeModal();
-                    }}
+                    onClick={() => createOrder('paypal')}
                     className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600"
                   >
                     Payer avec Paypal
                   </button>
                   <button
-                    onClick={() => {
-                      navigate('/checkout/card');
-                      closeModal();
-                    }}
+                    onClick={() => createOrder('card')}
                     className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600"
                   >
                     Payer avec Carte Bancaire
