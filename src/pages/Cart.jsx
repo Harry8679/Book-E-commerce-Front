@@ -26,31 +26,30 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
       <h1 className="text-3xl font-bold">Votre Panier</h1>
       {cartItems.length > 0 ? (
         <>
-          <table className="min-w-full bg-white mt-6">
+          <table className="min-w-full bg-white mt-6 text-left">
             <thead>
-              <tr>
-                <th>Image</th>
-                <th>Nom</th>
-                <th>Prix</th>
-                <th>Quantité</th>
-                <th>Total</th>
-                <th>Action</th>
+              <tr className="border-b">
+                <th className="py-2 px-4 w-1/6">Image</th>
+                <th className="py-2 px-4 w-1/4">Nom</th>
+                <th className="py-2 px-4 w-1/6">Prix</th>
+                <th className="py-2 px-4 w-1/6">Quantité</th>
+                <th className="py-2 px-4 w-1/6">Total</th>
+                <th className="py-2 px-4 w-1/6">Action</th>
               </tr>
             </thead>
             <tbody>
               {cartItems.map((item) => (
-                <tr key={item._id}>
-                  <td>
+                <tr key={item._id} className="border-b">
+                  <td className="py-2 px-4">
                     <img
                       src={item.imageUrl}
                       alt={item.name}
-                      className="w-16 h-16"
+                      className="w-16 h-16 object-cover"
                     />
                   </td>
-                  <td>{item.name}</td>
-                  <td>{item.price} €</td>
-                  <td className="flex items-center">
-                    {/* Bouton pour diminuer la quantité */}
+                  <td className="py-2 px-4">{item.name}</td>
+                  <td className="py-2 px-4">{item.price} €</td>
+                  <td className="py-2 px-4 flex items-center">
                     <button
                       onClick={() => decreaseQuantity(item._id)}
                       className="bg-gray-200 px-2 py-1 rounded"
@@ -58,7 +57,6 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
                       -
                     </button>
                     <span className="mx-4">{item.quantity}</span>
-                    {/* Bouton pour augmenter la quantité */}
                     <button
                       onClick={() => increaseQuantity(item._id)}
                       className="bg-gray-200 px-2 py-1 rounded"
@@ -66,9 +64,8 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
                       +
                     </button>
                   </td>
-                  <td>{(item.price * item.quantity).toFixed(2)} €</td>
-                  <td>
-                    {/* Bouton pour supprimer complètement l'article */}
+                  <td className="py-2 px-4">{(item.price * item.quantity).toFixed(2)} €</td>
+                  <td className="py-2 px-4">
                     <button
                       onClick={() => removeFromCart(item._id)}
                       className="bg-red-500 text-white px-4 py-2 rounded"
@@ -80,6 +77,7 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
               ))}
             </tbody>
           </table>
+
           <div className="mt-6 flex justify-between items-center">
             {/* Affichage du total */}
             <p className="text-2xl font-semibold">Total : {totalPrice.toFixed(2)} €</p>
