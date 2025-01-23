@@ -11,7 +11,7 @@ const CheckoutForm = ({ amount }) => {
     e.preventDefault();
     setIsProcessing(true);
 
-    const { data } = await axios.post('http://localhost:8008/api/v1/payments/stripe', { amount });
+    const { data } = await axios.post('http://localhost:8008/api/v1/orders/payments/stripe', { amount });
 
     const cardElement = elements.getElement(CardElement);
     const result = await stripe.confirmCardPayment(data.clientSecret, {
