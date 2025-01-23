@@ -142,14 +142,8 @@ function App() {
         <Route path="/listes-des-livres" element={<Books addToCart={addToCart} />} />
         <Route path="/" element={<Home />} />
         <Route path="/books/:productId" element={<ProductDetails />} />
-        <Route path="/cart" element={
-          <Cart
-            cartItems={cartItems}
-            increaseQuantity={increaseQuantity}
-            decreaseQuantity={decreaseQuantity}
-            removeFromCart={removeFromCart}
-          />
-        } />
+        <Route path="/cart" element={<Cart cartItems={cartItems} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} removeFromCart={removeFromCart}/>} />
+        
 
         {/* Routes Admin */}
         <Route path="/admin/dashboard" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><AdminDashboard /></AdminRoute>}/>
