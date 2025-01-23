@@ -145,6 +145,8 @@ function App() {
         <Route path="/books/:productId" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart cartItems={cartItems} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} removeFromCart={removeFromCart}/>} />
         <Route path="/stripe-checkout" element={<StripeCheckout />} />
+        {/* Autres routes */}
+        <Route path="/checkout/card" element={<StripeCheckout />} />
 
         {/* Routes Admin */}
         <Route path="/admin/dashboard" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><AdminDashboard /></AdminRoute>}/>
