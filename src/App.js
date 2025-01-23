@@ -147,6 +147,7 @@ function App() {
         <Route path="/stripe-checkout" element={<StripeCheckout />} />
         {/* Autres routes */}
         <Route path="/checkout/card" element={<StripeCheckout />} />
+        <Route path="/checkout/paypal" element={<div>Paiement Paypal en cours...</div>} />
 
         {/* Routes Admin */}
         <Route path="/admin/dashboard" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><AdminDashboard /></AdminRoute>}/>
