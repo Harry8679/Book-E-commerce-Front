@@ -25,6 +25,7 @@ import ViewProduct from './pages/admin/ViewProduct';
 import CreateProduct from './pages/admin/CreateProduct';
 import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
+import StripeCheckout from './pages/StripeCheckout';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
