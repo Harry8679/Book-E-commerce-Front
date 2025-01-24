@@ -51,7 +51,8 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
       if (paymentMethod === 'paypal') {
         navigate('/checkout/paypal');
       } else if (paymentMethod === 'card') {
-        navigate('/checkout/card');
+        // navigate('/checkout/card');
+        navigate('/checkout/card', { state: { amount: totalPrice * 100 } });
       }
 
       closeModal(); // Fermer le modal après avoir créé la commande
