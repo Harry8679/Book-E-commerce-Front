@@ -76,15 +76,29 @@ const Navbar = ({ isAuthenticated, logout, cartItems }) => {
             </NavLink>
 
             <NavLink
-              to="/listes-des-livres"
-              className={({ isActive }) =>
-                isActive
-                  ? 'text-teal-400 border-b-2 border-teal-400'
-                  : 'hover:text-teal-400 transition duration-300'
-              }
-            >
-              Liste des livres
+  to="/listes-des-livres"
+  className={({ isActive }) =>
+    isActive
+      ? 'text-teal-400 border-b-2 border-teal-400'
+      : 'hover:text-teal-400 transition duration-300'
+  }
+>
+  Liste des livres
             </NavLink>
+
+            {isAuthenticated && (
+              <NavLink
+                to="/my-orders"
+                className={({ isActive }) =>
+                  isActive
+                    ? 'text-teal-400 border-b-2 border-teal-400'
+                    : 'hover:text-teal-400 transition duration-300'
+                }
+              >
+                Mes Commandes
+              </NavLink>
+            )}
+
 
             {/* Lien Admin visible uniquement pour les admins */}
             {isAuthenticated && user?.role === 1 && (
