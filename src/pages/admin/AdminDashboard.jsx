@@ -15,6 +15,9 @@ const AdminDashboard = () => {
         <Link to="/admin/products" className="p-6 bg-white shadow-md rounded-md hover:bg-teal-100">
           Gérer les produits
         </Link>
+        <Link to="/admin/orders" className="p-6 bg-white shadow-md rounded-md hover:bg-teal-100">
+          Gérer les commandes
+        </Link>
       </div>
     </div>
   );
