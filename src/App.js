@@ -26,6 +26,8 @@ import CreateProduct from './pages/admin/CreateProduct';
 import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 import StripeCheckout from './pages/StripeCheckout';
+import OrderDetails from './pages/admin/OrderDetails';
+import OrderList from './pages/admin/OrderList';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -162,6 +164,8 @@ function App() {
         <Route path="/admin/products/create" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><CreateProduct /></AdminRoute>}/>
         <Route path="/admin/products/edit/:productId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><EditProduct /></AdminRoute>}/>
         <Route path="/admin/products/view/:productId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ViewProduct /></AdminRoute>} />
+        <Route path="/admin/orders" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><OrderList /></AdminRoute>}/>
+        <Route path="/admin/orders/:orderId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><OrderDetails /></AdminRoute>}/>
       </Routes>
     </BrowserRouter>
   );
