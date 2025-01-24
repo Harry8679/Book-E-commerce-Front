@@ -62,6 +62,13 @@ const CheckoutForm = ({ amount }) => {
         >
           {isProcessing ? 'Traitement...' : `Payer ${(amount / 100).toFixed(2)} €`}
         </button>
+        {/* <button
+          type="submit"
+          disabled={!stripe || isProcessing}
+          className="bg-teal-500 text-white px-6 py-2 mt-4 rounded hover:bg-teal-600"
+        >
+          {isProcessing ? 'Traitement...' : `Payer ${(amount / 100).toFixed(2)} €`}
+        </button> */}
       </form>
       {paymentError && <p className="text-red-500 mt-4">{paymentError}</p>}
       {paymentSuccess && <p className="text-green-500 mt-4">Paiement réussi !</p>}
