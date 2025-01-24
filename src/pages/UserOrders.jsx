@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
 const UserOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { state } = useLocation(); // Pour gérer les messages de succès après un paiement
 
   useEffect(() => {
     fetchUserOrders();
@@ -31,6 +32,12 @@ const UserOrders = () => {
 
   return (
     <div className="container mx-auto py-8">
+      {/* Afficher un message de succès s'il est disponible */}
+      {state?.successMessage && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          {state.successMessage}
+        </div>
+      )}
       <h1 className="text-3xl font-bold mb-6">Mes Commandes</h1>
       {orders.length === 0 ? (
         <p className="text-center">Aucune commande trouvée.</p>
@@ -51,7 +58,7 @@ const UserOrders = () => {
                 <td className="border border-gray-300 px-4 py-2">{order._id}</td>
                 <td className="border border-gray-300 px-4 py-2">{new Date(order.createdAt).toLocaleString()}</td>
                 <td className="border border-gray-300 px-4 py-2">{order.totalPrice.toFixed(2)} €</td>
-                <td className="border border-gray-300 px-4 py-2">{order.isPaid ? 'Payé' : 'Non payé'}</td>
+                <td className="border border-gray-300 px-4 py-2">{order.isPaid ? 'Payée' : 'Non payée'}</td>
                 <td className="border border-gray-300 px-4 py-2">
                   <Link
                     to={`/order-details/${order._id}`}
