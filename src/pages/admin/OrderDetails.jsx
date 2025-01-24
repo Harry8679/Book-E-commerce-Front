@@ -5,6 +5,7 @@ import axios from 'axios';
 const OrderDetails = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchOrderDetails();
@@ -14,17 +15,22 @@ const OrderDetails = () => {
     try {
       const res = await axios.get(`http://localhost:8008/api/v1/orders/${orderId}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // Inclure le token d'authentification
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
       setOrder(res.data.order);
     } catch (err) {
       console.error('Erreur lors du chargement des détails de la commande:', err);
+      setError('Une erreur est survenue lors du chargement des détails.');
     }
   };
 
+  if (error) {
+    return <p className="text-center text-red-500 mt-6">{error}</p>;
+  }
+
   if (!order) {
-    return <p className="text-center mt-10 text-lg">Chargement des détails de la commande...</p>;
+    return <p className="text-center mt-6">Chargement des détails de la commande...</p>;
   }
 
   return (
@@ -36,9 +42,9 @@ const OrderDetails = () => {
       <p><strong>Date :</strong> {new Date(order.createdAt).toLocaleString()}</p>
       <h2 className="text-2xl font-bold mt-6">Produits :</h2>
       <ul className="list-disc ml-6">
-        {order.products.map((product, index) => (
+        {order.products.map((item, index) => (
           <li key={index}>
-            {product.product.name} - {product.quantity} × {product.price.toFixed(2)} €
+            {item.product.name} - {item.quantity} × {item.price.toFixed(2)} €
           </li>
         ))}
       </ul>
