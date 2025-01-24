@@ -7,15 +7,21 @@ import CheckoutForm from './CheckoutForm';
 const stripePromise = loadStripe('pk_test_51QkYSB2RfwNkGwDfMDbWJsQmS5BcIGHypKTNtcCJ9rlbWd3RqZfiCU0wy9nTLVNYOOjaYpB5EjIjySSva6t1EYXx00spFGqQDZ'); // Votre clé publique Stripe
 
 const StripeCheckout = () => {
-  const { state } = useLocation(); // Récupérer le state contenant `amount`
+  const { state } = useLocation(); // Récupérer le montant de l'état de navigation
+  const amount = state?.amount;
 
-  if (!state?.amount) {
-    return <p>Montant invalide ou non spécifié.</p>;
+  if (!amount || isNaN(amount)) {
+    return (
+      <div className="container mx-auto py-8">
+        <h1 className="text-3xl font-bold text-center">Erreur</h1>
+        <p className="text-center mt-4 text-red-500">Montant invalide ou non spécifié.</p>
+      </div>
+    );
   }
 
   return (
     <Elements stripe={stripePromise}>
-      <CheckoutForm amount={state.amount} />
+      <CheckoutForm amount={amount} />
     </Elements>
   );
 };
