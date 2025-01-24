@@ -28,6 +28,7 @@ import Cart from './pages/Cart';
 import StripeCheckout from './pages/StripeCheckout';
 import OrderDetails from './pages/admin/OrderDetails';
 import OrderList from './pages/admin/OrderList';
+import UserOrders from './pages/UserOrders';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -150,6 +151,7 @@ function App() {
         {/* Autres routes */}
         <Route path="/checkout/card" element={<StripeCheckout />} />
         <Route path="/checkout/paypal" element={<div>Paiement Paypal en cours...</div>} />
+        <Route path="/my-orders" element={isAuthenticated ? <UserOrders /> : <Navigate to="/signin" />} />
 
         {/* Routes Admin */}
         <Route path="/admin/dashboard" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><AdminDashboard /></AdminRoute>}/>
