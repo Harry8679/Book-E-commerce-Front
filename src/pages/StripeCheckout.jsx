@@ -12,7 +12,7 @@ const StripeCheckout = () => {
 
   if (!amount || isNaN(amount)) {
     return (
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto py-8 mt-20">
         <h1 className="text-3xl font-bold text-center">Erreur</h1>
         <p className="text-center mt-4 text-red-500">Montant invalide ou non spécifié.</p>
       </div>
@@ -20,9 +20,11 @@ const StripeCheckout = () => {
   }
 
   return (
-    <Elements stripe={stripePromise}>
-      <CheckoutForm amount={amount} />
-    </Elements>
+    <div className="mt-20"> {/* Ajout de la marge supérieure */}
+      <Elements stripe={stripePromise}>
+        <CheckoutForm amount={amount} />
+      </Elements>
+    </div>
   );
 };
 
