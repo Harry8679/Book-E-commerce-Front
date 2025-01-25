@@ -5,7 +5,7 @@ import axios from 'axios';
 const UserOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { state } = useLocation(); // Pour gérer les messages de succès après un paiement
+  const { state } = useLocation();
 
   useEffect(() => {
     fetchUserOrders();
@@ -32,7 +32,6 @@ const UserOrders = () => {
 
   return (
     <div className="container mx-auto py-8">
-      {/* Afficher un message de succès s'il est disponible */}
       {state?.successMessage && (
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
           {state.successMessage}
