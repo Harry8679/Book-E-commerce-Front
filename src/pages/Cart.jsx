@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import PayPalButton from '../components/PayPalButton';
+// import PayPalButton from './PayPalButton'; // Importation du bouton PayPal personnalisé
 
 const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState(null); // Gérer le mode de paiement (PayPal ou carte bancaire)
+  const [isPayPalLoading, setIsPayPalLoading] = useState(false);
 
   // Calcul du total de tous les produits
   const totalPrice = cartItems.reduce(
@@ -23,7 +27,7 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
   };
 
   // Fonction pour créer une commande
-  const createOrder = async (paymentMethod) => {
+  const createOrder = async (method) => {
     const products = cartItems.map((item) => ({
       product: item._id,
       quantity: item.quantity,
@@ -36,7 +40,7 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
         {
           products,
           totalPrice,
-          paymentMethod,
+          paymentMethod: method,
         },
         {
           headers: {
@@ -47,11 +51,13 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
 
       console.log('Commande créée avec succès :', response.data);
 
+      // Mise à jour du mode de paiement
+      setPaymentMethod(method);
+
       // Naviguer vers la page de confirmation de paiement ou la page suivante
-      if (paymentMethod === 'paypal') {
-        navigate('/checkout/paypal');
-      } else if (paymentMethod === 'card') {
-        // navigate('/checkout/card');
+      if (method === 'paypal') {
+        setIsPayPalLoading(true); // Activer le chargement de PayPal
+      } else if (method === 'card') {
         navigate('/checkout/card', { state: { amount: totalPrice * 100 } });
       }
 
@@ -60,6 +66,12 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
       console.error('Erreur lors de la création de la commande :', error);
       alert('Une erreur est survenue lors de la création de la commande.');
     }
+  };
+
+  // Gestion du paiement PayPal réussi
+  const handlePayPalSuccess = () => {
+    alert('Paiement PayPal réussi !');
+    navigate('/my-orders', { state: { successMessage: 'Commande payée avec succès !' } });
   };
 
   return (
@@ -158,6 +170,13 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
                   Annuler
                 </button>
               </div>
+            </div>
+          )}
+
+          {/* Bouton PayPal */}
+          {paymentMethod === 'paypal' && isPayPalLoading && (
+            <div className="mt-6">
+              <PayPalButton amount={totalPrice.toFixed(2)} onSuccess={handlePayPalSuccess} />
             </div>
           )}
         </>
