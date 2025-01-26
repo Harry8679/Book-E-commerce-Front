@@ -1,15 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const CheckoutForm = ({ amount, orderId }) => {
+const CheckoutForm = ({ amount }) => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState('');
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [orderId, setOrderId] = useState(null);
+
+  // Récupérer la dernière commande au chargement du composant
+  useEffect(() => {
+    const fetchLastOrder = async () => {
+      try {
+        const { data } = await axios.get('http://localhost:8008/api/v1/orders/last-order', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Authentification
+          },
+        });
+        setOrderId(data.order._id); // Stocker l'ID de la commande
+      } catch (error) {
+        console.error('Erreur lors de la récupération de la dernière commande :', error);
+      }
+    };
+
+    fetchLastOrder();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,10 +62,8 @@ const CheckoutForm = ({ amount, orderId }) => {
         console.error('Erreur de paiement :', result.error.message);
         setPaymentError(result.error.message);
       } else if (result.paymentIntent.status === 'succeeded') {
-        console.log('Sucess payment');
-        console.log('====================> Order ID ', orderId);
         // Étape 3 : Mettre à jour le statut `isPaid` dans la commande via votre API backend
-        /* await axios.put(
+        await axios.put(
           `http://localhost:8008/api/v1/orders/${orderId}/pay`,
           {},
           {
@@ -54,10 +71,11 @@ const CheckoutForm = ({ amount, orderId }) => {
               Authorization: `Bearer ${localStorage.getItem('token')}`, // Authentification
             },
           }
-        );*/
+        );
+
         // Paiement réussi
         setPaymentSuccess(true);
-        alert('Paiement réussi !');
+        alert('Paiement réussi et commande mise à jour !');
         navigate('/my-orders', { state: { successMessage: 'Commande payée avec succès !' } });
       }
     } catch (error) {
@@ -74,7 +92,7 @@ const CheckoutForm = ({ amount, orderId }) => {
         <CardElement className="p-4 border rounded-md" />
         <button
           type="submit"
-          disabled={!stripe || isProcessing}
+          disabled={!stripe || isProcessing || !orderId} // Désactiver si orderId est null
           className="bg-teal-500 text-white px-6 py-2 mt-4 rounded hover:bg-teal-600"
         >
           {isProcessing ? 'Traitement...' : `Payer ${(amount / 100).toFixed(2)} €`}
