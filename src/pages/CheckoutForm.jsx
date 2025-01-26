@@ -3,7 +3,7 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const CheckoutForm = ({ amount }) => {
+const CheckoutForm = ({ amount, setCartItems }) => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
@@ -72,6 +72,10 @@ const CheckoutForm = ({ amount }) => {
             },
           }
         );
+
+        // Étape 4 : Vider le panier
+        localStorage.removeItem('cart'); // Supprimer le panier du localStorage
+        setCartItems([]); // Réinitialiser l'état du panier dans React
 
         // Paiement réussi
         setPaymentSuccess(true);
