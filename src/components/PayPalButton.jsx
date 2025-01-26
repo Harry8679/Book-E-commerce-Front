@@ -5,11 +5,17 @@ const PayPalButton = ({ amount, onSuccess }) => {
   const paypalRef = useRef();
 
   useEffect(() => {
-    const loadPayPal = async () => {
+    // Vérifiez si le SDK PayPal est chargé
+    const checkPayPalSDK = () => {
       if (!window.paypal) {
         console.error("PayPal SDK non chargé.");
-        return;
+        return false;
       }
+      return true;
+    };
+
+    const loadPayPalButton = async () => {
+      if (!checkPayPalSDK()) return;
 
       window.paypal.Buttons({
         createOrder: async () => {
@@ -19,29 +25,28 @@ const PayPalButton = ({ amount, onSuccess }) => {
             });
             return data.id; // Renvoie l'ID de commande PayPal
           } catch (error) {
-            console.error('Erreur lors de la création de l\'order PayPal :', error);
-            throw new Error('Erreur lors de la création de l\'order PayPal.');
+            console.error("Erreur lors de la création de l'ordre PayPal :", error);
+            throw new Error("Erreur lors de la création de l'ordre PayPal.");
           }
         },
         onApprove: async (data) => {
           try {
-            const { orderId } = data;
             const response = await axios.post('http://localhost:8008/api/v1/orders/capture-paypal-order', {
-              orderId,
+              orderId: data.orderID,
             });
-            console.log('Paiement capturé avec succès :', response.data);
+            console.log("Paiement capturé avec succès :", response.data);
             onSuccess();
           } catch (error) {
-            console.error('Erreur lors de la capture du paiement :', error);
+            console.error("Erreur lors de la capture du paiement :", error);
           }
         },
         onError: (err) => {
-          console.error('Erreur PayPal :', err);
+          console.error("Erreur PayPal :", err);
         },
       }).render(paypalRef.current);
     };
 
-    loadPayPal();
+    loadPayPalButton();
   }, [amount, onSuccess]);
 
   return <div ref={paypalRef}></div>;
