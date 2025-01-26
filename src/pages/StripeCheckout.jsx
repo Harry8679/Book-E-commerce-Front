@@ -4,10 +4,10 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import CheckoutForm from './CheckoutForm';
 
-const stripePromise = loadStripe('pk_test_51QkYSB2RfwNkGwDfMDbWJsQmS5BcIGHypKTNtcCJ9rlbWd3RqZfiCU0wy9nTLVNYOOjaYpB5EjIjySSva6t1EYXx00spFGqQDZ'); // Votre clé publique Stripe
+const stripePromise = loadStripe('pk_test_51QkYSB2RfwNkGwDfMDbWJsQmS5BcIGHypKTNtcCJ9rlbWd3RqZfiCU0wy9nTLVNYOOjaYpB5EjIjySSva6t1EYXx00spFGqQDZ'); // Clé publique Stripe
 
-const StripeCheckout = () => {
-  const { state } = useLocation(); // Récupérer le montant de l'état de navigation
+const StripeCheckout = ({ setCartItems }) => {
+  const { state } = useLocation(); // Récupérer les données transmises via `navigate`
   const amount = state?.amount;
 
   if (!amount || isNaN(amount)) {
@@ -20,9 +20,9 @@ const StripeCheckout = () => {
   }
 
   return (
-    <div className="mt-20"> {/* Ajout de la marge supérieure */}
+    <div className="mt-20">
       <Elements stripe={stripePromise}>
-        <CheckoutForm amount={amount} />
+        <CheckoutForm amount={amount} setCartItems={setCartItems} />
       </Elements>
     </div>
   );
