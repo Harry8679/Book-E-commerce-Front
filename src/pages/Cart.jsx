@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PayPalButton from '../components/PayPalButton';
-// import PayPalButton from './PayPalButton'; // Importation du bouton PayPal personnalisé
 
 const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState(null); // Gérer le mode de paiement (PayPal ou carte bancaire)
-  const [isPayPalLoading, setIsPayPalLoading] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null); // Mode de paiement sélectionné
 
   // Calcul du total de tous les produits
   const totalPrice = cartItems.reduce(
@@ -24,6 +22,7 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
   // Fermer le modal
   const closeModal = () => {
     setIsModalOpen(false);
+    setSelectedPaymentMethod(null); // Réinitialiser le mode de paiement
   };
 
   // Fonction pour créer une commande
@@ -51,17 +50,15 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
 
       console.log('Commande créée avec succès :', response.data);
 
-      // Mise à jour du mode de paiement
-      setPaymentMethod(method);
+      // Enregistrer le mode de paiement sélectionné
+      setSelectedPaymentMethod(method);
 
-      // Naviguer vers la page de confirmation de paiement ou la page suivante
+      // Naviguer ou afficher les boutons en fonction de la méthode
       if (method === 'paypal') {
-        setIsPayPalLoading(true); // Activer le chargement de PayPal
+        setIsModalOpen(false); // Fermer le modal pour afficher le bouton PayPal
       } else if (method === 'card') {
         navigate('/checkout/card', { state: { amount: totalPrice * 100 } });
       }
-
-      closeModal(); // Fermer le modal après avoir créé la commande
     } catch (error) {
       console.error('Erreur lors de la création de la commande :', error);
       alert('Une erreur est survenue lors de la création de la commande.');
@@ -142,7 +139,7 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
             </button>
           </div>
 
-          {/* Modal */}
+          {/* Modal de choix du paiement */}
           {isModalOpen && (
             <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
               <div className="bg-white rounded-lg shadow-lg p-8 w-96">
@@ -154,7 +151,7 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
                     onClick={() => createOrder('paypal')}
                     className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600"
                   >
-                    Payer avec Paypal
+                    Payer avec PayPal
                   </button>
                   <button
                     onClick={() => createOrder('card')}
@@ -174,7 +171,7 @@ const Cart = ({ cartItems, increaseQuantity, decreaseQuantity, removeFromCart })
           )}
 
           {/* Bouton PayPal */}
-          {paymentMethod === 'paypal' && isPayPalLoading && (
+          {selectedPaymentMethod === 'paypal' && (
             <div className="mt-6">
               <PayPalButton amount={totalPrice.toFixed(2)} onSuccess={handlePayPalSuccess} />
             </div>
