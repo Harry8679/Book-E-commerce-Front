@@ -149,7 +149,7 @@ function App() {
         <Route path="/cart" element={<Cart cartItems={cartItems} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} removeFromCart={removeFromCart}/>} />
         <Route path="/stripe-checkout" element={<StripeCheckout />} />
         {/* Autres routes */}
-        <Route path="/checkout/card" element={<StripeCheckout />} />
+        <Route path="/checkout/card" element={<StripeCheckout setCartItems={setCartItems} />} />
         <Route path="/checkout/paypal" element={<div>Paiement Paypal en cours...</div>} />
         <Route path="/my-orders" element={isAuthenticated ? <UserOrders /> : <Navigate to="/signin" />} />
         <Route path="/order-details/:orderId" element={isAuthenticated ? <OrderDetails /> : <Navigate to="/signin" />} />
