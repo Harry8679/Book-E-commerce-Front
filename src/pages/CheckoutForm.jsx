@@ -24,7 +24,7 @@ const CheckoutForm = ({ amount, orderId }) => {
         { amount, orderId },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Authentification
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         }
       );
@@ -58,7 +58,7 @@ const CheckoutForm = ({ amount, orderId }) => {
           {},
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`, // Authentification
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           }
         );
