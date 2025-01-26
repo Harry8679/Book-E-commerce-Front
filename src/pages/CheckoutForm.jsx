@@ -24,19 +24,12 @@ const CheckoutForm = ({ amount, orderId }) => {
         { amount, orderId },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Authentification
           },
         }
       );
 
       const cardElement = elements.getElement(CardElement);
-
-      // Vérifiez si le CardElement est disponible
-      if (!cardElement) {
-        setPaymentError('Erreur lors de la récupération des informations de carte.');
-        setIsProcessing(false);
-        return;
-      }
 
       // Étape 2 : Confirmer le paiement avec Stripe
       const result = await stripe.confirmCardPayment(data.clientSecret, {
@@ -50,28 +43,25 @@ const CheckoutForm = ({ amount, orderId }) => {
         console.error('Erreur de paiement :', result.error.message);
         setPaymentError(result.error.message);
       } else if (result.paymentIntent.status === 'succeeded') {
-        // Paiement réussi
-
-        // Étape 3 : Mettre à jour le statut `isPaid` dans la commande
-        await axios.put(
+        console.log('Sucess payment');
+        console.log('====================> Order ID ', orderId);
+        // Étape 3 : Mettre à jour le statut `isPaid` dans la commande via votre API backend
+        /* await axios.put(
           `http://localhost:8008/api/v1/orders/${orderId}/pay`,
           {},
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
+              Authorization: `Bearer ${localStorage.getItem('token')}`, // Authentification
             },
           }
-        );
-
-        // Mettre à jour l'état de succès
+        );*/
+        // Paiement réussi
         setPaymentSuccess(true);
-
-        // Afficher une alerte et rediriger l'utilisateur
-        alert('Paiement réussi et commande mise à jour !');
+        alert('Paiement réussi !');
         navigate('/my-orders', { state: { successMessage: 'Commande payée avec succès !' } });
       }
     } catch (error) {
-      console.error('Erreur lors du paiement :', error);
+      console.error('Erreur lors de la création du PaymentIntent :', error);
       setPaymentError('Une erreur est survenue lors du paiement.');
     } finally {
       setIsProcessing(false);
