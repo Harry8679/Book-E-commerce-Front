@@ -31,6 +31,13 @@ const CheckoutForm = ({ amount, orderId }) => {
 
       const cardElement = elements.getElement(CardElement);
 
+      // Vérifiez si le CardElement est disponible
+      if (!cardElement) {
+        setPaymentError('Erreur lors de la récupération des informations de carte.');
+        setIsProcessing(false);
+        return;
+      }
+
       // Étape 2 : Confirmer le paiement avec Stripe
       const result = await stripe.confirmCardPayment(data.clientSecret, {
         payment_method: {
@@ -44,12 +51,27 @@ const CheckoutForm = ({ amount, orderId }) => {
         setPaymentError(result.error.message);
       } else if (result.paymentIntent.status === 'succeeded') {
         // Paiement réussi
+
+        // Étape 3 : Mettre à jour le statut `isPaid` dans la commande
+        await axios.put(
+          `http://localhost:8008/api/v1/orders/${orderId}/pay`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`, // Authentification
+            },
+          }
+        );
+
+        // Mettre à jour l'état de succès
         setPaymentSuccess(true);
-        alert('Paiement réussi !');
+
+        // Afficher une alerte et rediriger l'utilisateur
+        alert('Paiement réussi et commande mise à jour !');
         navigate('/my-orders', { state: { successMessage: 'Commande payée avec succès !' } });
       }
     } catch (error) {
-      console.error('Erreur lors de la création du PaymentIntent :', error);
+      console.error('Erreur lors du paiement :', error);
       setPaymentError('Une erreur est survenue lors du paiement.');
     } finally {
       setIsProcessing(false);
