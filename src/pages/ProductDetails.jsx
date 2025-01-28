@@ -6,24 +6,24 @@ import ProductComments from '../components/ProductComments';
 const ProductDetails = ({ addToCart }) => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
-  const [userHasPurchased, setUserHasPurchased] = useState(false); // Vérification d'achat
+  const [userHasPurchased, setUserHasPurchased] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        console.log(`🔍 Récupération du produit ID: ${productId}`);
         const response = await axios.get(`http://localhost:8008/api/v1/products/${productId}`);
         const productData = response.data;
 
-        // Générer l'URL de l'image si elle n'est pas présente
         if (!productData.imageUrl) {
           productData.imageUrl = `http://localhost:8008/api/v1/products/photo/${productData._id}`;
         }
 
         setProduct(productData);
       } catch (error) {
-        console.error('Erreur lors de la récupération du produit :', error);
+        console.error('❌ Erreur lors de la récupération du produit:', error);
         setError("Impossible de charger le produit.");
       } finally {
         setLoading(false);
@@ -33,11 +33,17 @@ const ProductDetails = ({ addToCart }) => {
     const checkIfUserHasPurchased = async () => {
       try {
         const token = localStorage.getItem('token');
-        if (!token) return;
+        if (!token) {
+          console.warn("⚠️ Utilisateur non connecté, impossible de vérifier l'achat.");
+          return;
+        }
 
+        console.log("📌 Vérification des commandes de l'utilisateur...");
         const response = await axios.get(`http://localhost:8008/api/v1/orders/user-orders`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
+        console.log("📌 Réponse API user-orders :", response.data);
 
         const userOrders = response.data.orders;
         const hasPurchased = userOrders.some(order =>
@@ -46,7 +52,7 @@ const ProductDetails = ({ addToCart }) => {
 
         setUserHasPurchased(hasPurchased);
       } catch (error) {
-        console.error("Erreur lors de la vérification des achats :", error);
+        console.error("❌ Erreur lors de la vérification des achats :", error);
       }
     };
 
