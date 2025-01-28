@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import ProductComments from '../components/ProductComments';
 
 const ProductDetails = ({ addToCart }) => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const [userHasPurchased, setUserHasPurchased] = useState(false); // Vérification d'achat
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -20,14 +24,42 @@ const ProductDetails = ({ addToCart }) => {
         setProduct(productData);
       } catch (error) {
         console.error('Erreur lors de la récupération du produit :', error);
+        setError("Impossible de charger le produit.");
+      } finally {
+        setLoading(false);
       }
     };
+
+    const checkIfUserHasPurchased = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const response = await axios.get(`http://localhost:8008/api/v1/orders/user-orders`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const userOrders = response.data.orders;
+        const hasPurchased = userOrders.some(order =>
+          order.products.some(item => item.product._id === productId)
+        );
+
+        setUserHasPurchased(hasPurchased);
+      } catch (error) {
+        console.error("Erreur lors de la vérification des achats :", error);
+      }
+    };
+
     fetchProduct();
+    checkIfUserHasPurchased();
   }, [productId]);
+
+  if (loading) return <p className="text-center mt-6">Chargement...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
     <div className="container mx-auto py-8">
-      {product ? (
+      {product && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="w-full h-96">
             <img
@@ -48,9 +80,13 @@ const ProductDetails = ({ addToCart }) => {
             </button>
           </div>
         </div>
-      ) : (
-        <p>Chargement...</p>
       )}
+
+      {/* Section des commentaires */}
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold mb-4">Avis des clients</h2>
+        <ProductComments productId={productId} userHasPurchased={userHasPurchased} />
+      </div>
     </div>
   );
 };
