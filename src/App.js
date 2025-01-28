@@ -29,7 +29,6 @@ import StripeCheckout from './pages/StripeCheckout';
 import OrderDetails from './pages/admin/OrderDetails';
 import OrderList from './pages/admin/OrderList';
 import UserOrders from './pages/UserOrders';
-import ProductComments from './components/ProductComments';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -149,7 +148,6 @@ function App() {
         <Route path="/books/:productId" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart cartItems={cartItems} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} removeFromCart={removeFromCart}/>} />
         <Route path="/stripe-checkout" element={<StripeCheckout />} />
-        <ProductComments productId={product._id} />
         {/* Autres routes */}
         <Route path="/checkout/card" element={<StripeCheckout setCartItems={setCartItems} />} />
         <Route path="/checkout/paypal" element={<div>Paiement Paypal en cours...</div>} />
