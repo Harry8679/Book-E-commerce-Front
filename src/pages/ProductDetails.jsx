@@ -40,9 +40,13 @@ const ProductDetails = ({ addToCart }) => {
         });
 
         const userOrders = response.data.orders;
+        // const hasPurchased = userOrders.some(order =>
+        //   order.products.some(item => item.product._id === productId)
+        // );
         const hasPurchased = userOrders.some(order =>
-          order.products.some(item => item.product._id === productId)
+          order.products.some(item => item.product._id.toString() === productId.toString())
         );
+        
 
         setUserHasPurchased(hasPurchased);
       } catch (error) {
