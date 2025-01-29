@@ -34,25 +34,32 @@ const ProductDetails = ({ addToCart }) => {
       try {
         const token = localStorage.getItem('token');
         if (!token) return;
-
+    
         const response = await axios.get(`http://localhost:8008/api/v1/orders/user-orders`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
+    
+        console.log("Réponse API des commandes:", response.data); // <-- Ajout du log
+    
         const userOrders = response.data.orders;
-        // const hasPurchased = userOrders.some(order =>
-        //   order.products.some(item => item.product._id === productId)
-        // );
+    
+        console.log("ID du produit à vérifier:", productId); // <-- Ajout du log
+    
         const hasPurchased = userOrders.some(order =>
-          order.products.some(item => item.product._id.toString() === productId.toString())
+          order.products.some(item => {
+            console.log("Comparaison:", item.product._id, "vs", productId); // <-- Ajout du log
+            return item.product._id.toString() === productId.toString();
+          })
         );
-        
-
+    
+        console.log("Résultat de hasPurchased:", hasPurchased); // <-- Ajout du log
+    
         setUserHasPurchased(hasPurchased);
       } catch (error) {
         console.error("Erreur lors de la vérification des achats :", error);
       }
     };
+    
 
     fetchProduct();
     checkIfUserHasPurchased();
