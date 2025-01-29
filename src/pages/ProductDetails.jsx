@@ -39,26 +39,31 @@ const ProductDetails = ({ addToCart }) => {
           headers: { Authorization: `Bearer ${token}` },
         });
     
-        console.log("Réponse API des commandes:", response.data); // <-- Ajout du log
+        console.log("Réponse API des commandes:", response.data); // Log général
     
         const userOrders = response.data.orders;
     
-        console.log("ID du produit à vérifier:", productId); // <-- Ajout du log
+        console.log("Orders est un tableau ?", Array.isArray(userOrders));
+        console.log("Nombre de commandes :", userOrders.length);
+        console.log("Première commande :", userOrders[0]); // Voir structure d'une commande
+    
+        console.log("ID du produit à vérifier:", productId); // Voir l'ID du produit actuel
     
         const hasPurchased = userOrders.some(order =>
           order.products.some(item => {
-            console.log("Comparaison:", item.product._id, "vs", productId); // <-- Ajout du log
-            return item.product._id.toString() === productId.toString();
+            console.log("Comparaison:", item.product?._id, "vs", productId); // Vérifier la correspondance
+            return item.product?._id?.toString() === productId.toString();
           })
         );
     
-        console.log("Résultat de hasPurchased:", hasPurchased); // <-- Ajout du log
+        console.log("Résultat de hasPurchased:", hasPurchased); // Voir le résultat final
     
         setUserHasPurchased(hasPurchased);
       } catch (error) {
         console.error("Erreur lors de la vérification des achats :", error);
       }
     };
+    
     
 
     fetchProduct();
