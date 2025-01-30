@@ -11,6 +11,7 @@ const ProductComments = ({ productId, userHasPurchased }) => {
 
     try {
       const token = localStorage.getItem('token');
+      console.log('token', token);
       const response = await axios.post(
         `http://localhost:8008/api/v1/product/${productId}/comment`,
         { text: commentText, rating },
