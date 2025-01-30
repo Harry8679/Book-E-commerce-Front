@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const OrderDetails = () => {
+const OrderDetailsAdmin = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
   const [error, setError] = useState('');
@@ -52,4 +52,4 @@ const OrderDetails = () => {
   );
 };
 
-export default OrderDetails;
+export default OrderDetailsAdmin;

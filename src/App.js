@@ -169,7 +169,7 @@ function App() {
         <Route path="/admin/products/edit/:productId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><EditProduct /></AdminRoute>}/>
         <Route path="/admin/products/view/:productId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><ViewProduct /></AdminRoute>} />
         <Route path="/admin/orders" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><OrderList /></AdminRoute>}/>
-        <Route path="/admin/orders/:orderId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><OrderDetails /></AdminRoute>}/>
+        <Route path="/admin/orders/:orderId" element={<AdminRoute isAuthenticated={isAuthenticated} userRole={userRole}><OrderDe /></AdminRoute>}/>
       </Routes>
     </BrowserRouter>
   );
