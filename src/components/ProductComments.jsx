@@ -1,25 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
-const ProductComments = ({ productId }) => {
+const ProductComments = ({ productId, userHasPurchased }) => {
+  const [commentText, setCommentText] = useState('');
+  const [rating, setRating] = useState(1);
   const [comments, setComments] = useState([]);
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const { data } = await axios.get(`http://localhost:8008/api/v1/product/${productId}/comments`);
-        setComments(data.comments);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des commentaires :', error);
-      }
-    };
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
 
-    fetchComments();
-  }, [productId]);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `http://localhost:8008/api/v1/product/${productId}/comment`,
+        { text: commentText, rating },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setComments([response.data.comment, ...comments]);
+      setCommentText('');
+      setRating(1);
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du commentaire :', error);
+    }
+  };
 
   return (
     <div className="mt-6">
       <h3 className="text-lg font-semibold">Avis des clients</h3>
+
+      {/* Affichage des commentaires existants */}
       {comments.length > 0 ? (
         <ul className="mt-4 space-y-4">
           {comments.map((comment) => (
@@ -32,6 +43,41 @@ const ProductComments = ({ productId }) => {
         </ul>
       ) : (
         <p>Aucun commentaire pour ce produit.</p>
+      )}
+
+      {/* Formulaire pour ajouter un commentaire (visible uniquement si l'utilisateur a acheté le produit) */}
+      {userHasPurchased && (
+        <form onSubmit={handleCommentSubmit} className="mt-6">
+          <textarea
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+            rows="4"
+            className="w-full p-2 border rounded"
+            placeholder="Laissez votre commentaire..."
+            required
+          />
+          <div className="mt-2">
+            <label htmlFor="rating">Note: </label>
+            <select
+              id="rating"
+              value={rating}
+              onChange={(e) => setRating(Number(e.target.value))}
+              className="ml-2 p-1"
+            >
+              {[1, 2, 3, 4, 5].map((star) => (
+                <option key={star} value={star}>
+                  {star} ⭐
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="mt-4 bg-blue-500 text-white px-6 py-2 rounded"
+          >
+            Ajouter un commentaire
+          </button>
+        </form>
       )}
     </div>
   );
