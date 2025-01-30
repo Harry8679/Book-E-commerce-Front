@@ -26,7 +26,7 @@ import CreateProduct from './pages/admin/CreateProduct';
 import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 import StripeCheckout from './pages/StripeCheckout';
-import OrderDetails from './pages/admin/OrderDetails';
+import OrderDetails from './pages/OrderDetails';
 import OrderList from './pages/admin/OrderList';
 import UserOrders from './pages/UserOrders';
 
