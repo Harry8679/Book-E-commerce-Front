@@ -13,7 +13,7 @@ const OrderDetails = () => {
 
   const fetchOrderDetails = async () => {
     try {
-      const res = await axios.get(`http://localhost:8008/api/v1/orders/${orderId}/admin`, {
+      const res = await axios.get(`http://localhost:8008/api/v1/orders/${orderId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
