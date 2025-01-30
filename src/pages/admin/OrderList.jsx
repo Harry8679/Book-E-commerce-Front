@@ -46,7 +46,7 @@ const OrderList = () => {
               <td className="border border-gray-300 px-4 py-2">{new Date(order.createdAt).toLocaleString()}</td>
               <td className="border border-gray-300 px-4 py-2">
                 <Link
-                  to={`/admin/orders/${order._id}/admin`}
+                  to={`/admin/orders/${order._id}`}
                   className="text-teal-500 hover:underline"
                 >
                   Voir
