@@ -28,7 +28,7 @@ const OrderList = () => {
       <table className="min-w-full bg-white border-collapse border border-gray-200">
         <thead>
           <tr>
-            <th className="border border-gray-300 px-4 py-2">#</th> {/* Nouvelle colonne pour numéro */}
+            <th className="border border-gray-300 px-4 py-2">#</th>
             <th className="border border-gray-300 px-4 py-2">ID de la Commande</th>
             <th className="border border-gray-300 px-4 py-2">Utilisateur</th>
             <th className="border border-gray-300 px-4 py-2">Total</th>
@@ -39,7 +39,7 @@ const OrderList = () => {
         <tbody>
           {orders.map((order, index) => (
             <tr key={order._id}>
-              <td className="border border-gray-300 px-4 py-2">{index + 1}</td> {/* Affichage du numéro */}
+              <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
               <td className="border border-gray-300 px-4 py-2">{order._id}</td>
               <td className="border border-gray-300 px-4 py-2">{order.user?.email || 'N/A'}</td>
               <td className="border border-gray-300 px-4 py-2">{order.totalPrice.toFixed(2)} €</td>
