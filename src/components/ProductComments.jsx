@@ -8,6 +8,7 @@ const ProductComments = ({ productId, userHasPurchased }) => {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
+    console.log('productId', productId);
 
     try {
       const token = localStorage.getItem('token');
