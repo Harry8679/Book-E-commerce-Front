@@ -8,7 +8,6 @@ const ProductComments = ({ productId, userHasPurchased }) => {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
-    console.log('productId', productId);
 
     try {
       const token = localStorage.getItem('token');
@@ -28,6 +27,13 @@ const ProductComments = ({ productId, userHasPurchased }) => {
     }
   };
 
+  // Fonction pour afficher les étoiles
+  const renderStars = (rating) => {
+    const filledStars = Array(rating).fill('⭐'); // Crée un tableau de 'rating' étoiles jaunes
+    const emptyStars = Array(5 - rating).fill('☆'); // Crée un tableau de 5 - rating étoiles blanches
+    return [...filledStars, ...emptyStars].join('');
+  };
+
   return (
     <div className="mt-6">
       <h3 className="text-lg font-semibold">Avis des clients</h3>
@@ -38,7 +44,7 @@ const ProductComments = ({ productId, userHasPurchased }) => {
           {comments.map((comment) => (
             <li key={comment._id} className="border p-4 rounded-md">
               <p className="text-gray-700"><strong>{comment.user.name}</strong></p>
-              <p className="text-yellow-500">{"⭐".repeat(comment.rating)}</p>
+              <p className="text-yellow-500">{renderStars(comment.rating)}</p> {/* Affichage des étoiles */}
               <p className="text-gray-600">{comment.text}</p>
             </li>
           ))}
