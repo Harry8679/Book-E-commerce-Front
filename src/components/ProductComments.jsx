@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const ProductComments = ({ productId, userHasPurchased }) => {
+const ProductComments = ({ productId, userHasPurchased, comments }) => {
   const [commentText, setCommentText] = useState('');
   const [rating, setRating] = useState(1);
-  const [comments, setComments] = useState([]);
+  const [newComments, setNewComments] = useState(comments || []);  // S'assurer qu'on a toujours un tableau
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const token = localStorage.getItem('token');
-      console.log('token', token);
       const response = await axios.post(
         `http://localhost:8008/api/v1/product/${productId}/comment`,
         { text: commentText, rating },
@@ -19,7 +18,7 @@ const ProductComments = ({ productId, userHasPurchased }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setComments([response.data.comment, ...comments]);
+      setNewComments([response.data.comment, ...newComments]);  // Ajouter le nouveau commentaire
       setCommentText('');
       setRating(1);
     } catch (error) {
@@ -39,9 +38,9 @@ const ProductComments = ({ productId, userHasPurchased }) => {
       <h3 className="text-lg font-semibold">Avis des clients</h3>
 
       {/* Affichage des commentaires existants */}
-      {comments.length > 0 ? (
+      {newComments && newComments.length > 0 ? (
         <ul className="mt-4 space-y-4">
-          {comments.map((comment) => (
+          {newComments.map((comment) => (
             <li key={comment._id} className="border p-4 rounded-md">
               <p className="text-gray-700"><strong>{comment.user.name}</strong></p>
               <p className="text-yellow-500">{renderStars(comment.rating)}</p> {/* Affichage des étoiles */}

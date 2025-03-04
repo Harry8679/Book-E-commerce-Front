@@ -7,29 +7,36 @@ const ProductDetails = ({ addToCart }) => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [userHasPurchased, setUserHasPurchased] = useState(false); // Vérification d'achat
+  const [comments, setComments] = useState([]);  // Déclaration des commentaires
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Récupérer le produit et les commentaires
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`http://localhost:8008/api/v1/products/${productId}`);
         const productData = response.data;
 
-        // Générer l'URL de l'image si elle n'est pas présente
+        // Vérification et ajout de l'image si elle n'est pas présente
         if (!productData.imageUrl) {
           productData.imageUrl = `http://localhost:8008/api/v1/products/photo/${productData._id}`;
         }
-
+        
         setProduct(productData);
+
+        // Récupération des commentaires du produit
+        const commentsResponse = await axios.get(`http://localhost:8008/api/v1/product/${productId}/comments`);
+        setComments(commentsResponse.data.comments);  // Mise à jour des commentaires
       } catch (error) {
-        console.error('Erreur lors de la récupération du produit :', error);
-        setError("Impossible de charger le produit.");
+        console.error('Erreur lors de la récupération du produit et des commentaires:', error);
+        setError("Impossible de charger le produit et les commentaires.");
       } finally {
         setLoading(false);
       }
     };
 
+    // Vérifier si l'utilisateur a acheté le produit
     const checkIfUserHasPurchased = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -39,32 +46,17 @@ const ProductDetails = ({ addToCart }) => {
           headers: { Authorization: `Bearer ${token}` },
         });
     
-        console.log("Réponse API des commandes:", response.data); // Log général
-    
         const userOrders = response.data.orders;
     
-        console.log("Orders est un tableau ?", Array.isArray(userOrders));
-        console.log("Nombre de commandes :", userOrders.length);
-        console.log("Première commande :", userOrders[0]); // Voir structure d'une commande
-    
-        console.log("ID du produit à vérifier:", productId); // Voir l'ID du produit actuel
-    
         const hasPurchased = userOrders.some(order =>
-          order.products.some(item => {
-            console.log("Comparaison:", item.product?._id, "vs", productId); // Vérifier la correspondance
-            return item.product?._id?.toString() === productId.toString();
-          })
+          order.products.some(item => item.product?._id?.toString() === productId.toString())
         );
-    
-        console.log("Résultat de hasPurchased:", hasPurchased); // Voir le résultat final
     
         setUserHasPurchased(hasPurchased);
       } catch (error) {
         console.error("Erreur lors de la vérification des achats :", error);
       }
     };
-    
-    
 
     fetchProduct();
     checkIfUserHasPurchased();
@@ -101,7 +93,11 @@ const ProductDetails = ({ addToCart }) => {
       {/* Section des commentaires */}
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">Avis des clients</h2>
-        <ProductComments productId={productId} userHasPurchased={userHasPurchased} />
+        <ProductComments 
+          productId={productId} 
+          userHasPurchased={userHasPurchased} 
+          comments={comments}  // Passer les commentaires récupérés
+        />
       </div>
     </div>
   );
